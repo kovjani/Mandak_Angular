@@ -6,9 +6,13 @@
     "Mandak_angular": {
       "projectType": "application",
       "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        }
+          "@schematics/angular:service": {
+              "path": "src/app/shared/services"
+          },
+          "@schematics/angular:component": {
+            "style": "scss",
+            "path": "src/app/shared/components"
+          }
       },
       "root": "",
       "sourceRoot": "src",
@@ -30,9 +34,12 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+                "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
           },
           "configurations": {
             "production": {

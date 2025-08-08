@@ -1,0 +1,8 @@
+$navbar-height: 3.5em;
+$audio-player-height: 5.5em;
+$mandak-red: #800020;
+$mandak-green: #8fb514;
+
+.main-page-audio-player-hidden{
+    height: calc(100vh - $navbar-height - $audio-player-height);
+}

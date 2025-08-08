@@ -1,0 +1,44 @@
+@import "../../global";
+:host{
+    position: sticky;
+    top: 0;
+    width: 100vw;
+    //height: $navbar-height;
+    z-index: 2;
+}
+nav{
+    //height: $navbar-height;
+    background-color: $mandak-red;
+    box-shadow: 0 0 0.5em #333;
+}
+.nav-item{
+    color: white;
+    &:hover {
+        cursor: pointer;
+    }
+}
+.selected{
+  font-weight: bold;
+}
+#nav-logo{
+    height: 2em;
+    filter: drop-shadow(0 0 0.1em #333);
+    //position: sticky;
+    &:hover {
+        cursor: pointer;
+    }
+}
+.navbar-nav{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.navbar-toggler{
+    top: 0;
+    margin-right: 0.5em;
+}
+@media (max-width: 1000px) {
+    #nav-logo{
+        position: relative;
+    }
+}

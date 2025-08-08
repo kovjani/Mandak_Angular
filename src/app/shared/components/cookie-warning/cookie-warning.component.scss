@@ -1,0 +1,19 @@
+@import "../../global";
+:host {
+    width: 100vw;
+    padding: 1em;
+    position: fixed;
+    bottom: 0;
+    color: white;
+    background-color: $mandak-green ;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+}
+button{
+    background-color: white;
+    border-radius: 1em;
+    border: none;
+    padding: 0.5em 1em;
+}

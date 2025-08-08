@@ -1,0 +1,37 @@
+@import "../../../global";
+:host{
+    position: relative;
+    display: block;
+    overflow-y: auto;
+    height: calc(100vh - $navbar-height);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(/assets/images/kantorkepzo.jpg);
+}
+#villa-page-container{
+    color: white;
+    margin-top: 5em;
+}
+p{
+    text-align: justify;
+}
+
+#villa_images_container {
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    margin: 0;
+
+    img {
+        display: inline-block;
+        margin: 1em;
+        box-shadow: 0 0 10px #000;
+        height: 15em;
+    }
+}
+
+.mandak_villa_image:hover{
+    cursor: pointer;
+}

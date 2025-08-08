@@ -1,0 +1,55 @@
+import $ from 'jquery';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {SearchbarService} from "../../../services/searchbar.service";
+import {AudioPlayerService} from "../../../services/audio-player.service";
+import {FooterComponent} from "../../footer/footer.component";
+
+@Component({
+  selector: 'app-villa-page',
+  standalone: true,
+    imports: [
+        FooterComponent
+    ],
+  templateUrl: './villa-page.component.html',
+  styleUrl: './villa-page.component.scss'
+})
+export class VillaPageComponent implements OnInit {
+    @Output() update_images = new EventEmitter<string[]>();
+    @Output() update_image_index = new EventEmitter<number>();
+    @Output() PageChanging = new EventEmitter<string>();
+
+    images = [
+        "/assets/images/villa/1.jpg",
+        "/assets/images/villa/2.jpg",
+        "/assets/images/villa/3.jpg",
+        "/assets/images/villa/4.jpg",
+        "/assets/images/villa/5.jpg",
+        "/assets/images/villa/6.jpg",
+        "/assets/images/villa/7.jpg",
+        "/assets/images/villa/8.jpg",
+        "/assets/images/villa/9.jpg",
+        "/assets/images/villa/10.jpg",
+        "/assets/images/villa/11.jpg",
+        "/assets/images/villa/12.jpg",
+        "/assets/images/villa/13.jpg",
+        "/assets/images/villa/14.jpg",
+        "/assets/images/villa/15.jpg",
+        "/assets/images/villa/16.jpg",
+        "/assets/images/villa/17.jpg",
+        "/assets/images/villa/18.jpg",
+    ];
+
+
+    constructor(private searchbarService: SearchbarService, private audioService: AudioPlayerService) {}
+
+    ngOnInit() {
+        this.searchbarService.HideSearchbar();
+        this.audioService.HideAudioPlayer();
+    }
+
+    ViewInGallery(index: number){
+        this.update_images.emit(this.images);
+        this.update_image_index.emit(index);
+        this.PageChanging.emit("gallery");
+    }
+}
