@@ -1,8 +1,8 @@
-import $ from 'jquery';
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {SearchbarService} from "../../../services/searchbar.service";
 import {AudioPlayerService} from "../../../services/audio-player.service";
 import {FooterComponent} from "../../footer/footer.component";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-villa-page',
@@ -14,9 +14,6 @@ import {FooterComponent} from "../../footer/footer.component";
   styleUrl: './villa-page.component.scss'
 })
 export class VillaPageComponent implements OnInit {
-    @Output() update_images = new EventEmitter<string[]>();
-    @Output() update_image_index = new EventEmitter<number>();
-    @Output() PageChanging = new EventEmitter<string>();
 
     images = [
         "/assets/images/villa/1.jpg",
@@ -40,7 +37,7 @@ export class VillaPageComponent implements OnInit {
     ];
 
 
-    constructor(private searchbarService: SearchbarService, private audioService: AudioPlayerService) {}
+    constructor(private searchbarService: SearchbarService, private audioService: AudioPlayerService, private router: Router) {}
 
     ngOnInit() {
         this.searchbarService.HideSearchbar();
@@ -48,8 +45,6 @@ export class VillaPageComponent implements OnInit {
     }
 
     ViewInGallery(index: number){
-        this.update_images.emit(this.images);
-        this.update_image_index.emit(index);
-        this.PageChanging.emit("gallery");
+        this.router.navigate(['/gallery'], {queryParams: {images: JSON.stringify(this.images), index: index}});
     }
 }

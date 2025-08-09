@@ -1,32 +1,12 @@
-@if(actual_page !== "home"){
-    <app-navbar (PageChanging)="SetPage($event)" [actual_page_nav]="actual_page"></app-navbar>
+@if(this.actual_page !== '/home'){
+    <app-navbar></app-navbar>
 }
 
 <app-searchbar></app-searchbar>
 
-@if (actual_page === "home"){
-    <app-home-page (update_images)="UpdateGalleryImages($event)"
-                   (update_image_index)="UpdateGalleryImageIndex($event)"
-                   (PageChanging)="SetPage($event)"
-    ></app-home-page>
-} @else if (actual_page === "gallery"){
-    <app-gallery-page [images]="gallery_images"
-                      [image_index]="gallery_image_index"
-                      (update_image_index)="UpdateGalleryImageIndex($event)"
-    ></app-gallery-page>
-} @else if (actual_page === "repertoire") {
-    <app-repertoire-page></app-repertoire-page>
-} @else if (actual_page === "events"){
-    <app-events-page></app-events-page>
-} @else if (actual_page === "villa"){
-    <app-villa-page (update_images)="UpdateGalleryImages($event)"
-                    (update_image_index)="UpdateGalleryImageIndex($event)"
-                    (PageChanging)="SetPage($event)"
-    ></app-villa-page>
-}
+<router-outlet></router-outlet>
 
 <app-audio-player></app-audio-player>
-
-@if(!this.cookies_accepted){
+@if(!cookies_accepted){
     <app-cookie-warning></app-cookie-warning>
 }

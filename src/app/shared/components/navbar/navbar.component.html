@@ -12,8 +12,8 @@
                 @for (item of nav_items; track item.id) {
                     <li class="nav-item nav-link"
                         [id]="item.id + '-nav-item'"
-                        (click)="SetPageNav(item.id)"
-                        [class.selected]="this.actual_page_nav === item.id">
+                        [routerLink]="'/' + item.id"
+                        routerLinkActive="active">
                         {{ item.name }}
                     </li>
                 }

@@ -1,5 +1,6 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import $ from 'jquery';
+import {RouterLink, RouterLinkActive} from "@angular/router";
 
 interface Pages {
     id: string,
@@ -7,18 +8,17 @@ interface Pages {
 }
 
 @Component({
-  selector: 'app-navbar',
-  standalone: true,
-  templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss'
+    selector: 'app-navbar',
+    standalone: true,
+    templateUrl: './navbar.component.html',
+    imports: [
+        RouterLink,
+        RouterLinkActive
+    ],
+    styleUrl: './navbar.component.scss'
 })
 
 export class NavbarComponent implements OnInit{
-    @Input() actual_page_nav!: string;
-    @Output() PageChanging = new EventEmitter<string>();
-
-    admin: boolean = false;
-    user_id: number | null = null;
 
     nav_items: Pages[] = [
         { id: "home", name: "Kezdőlap" },
@@ -35,11 +35,6 @@ export class NavbarComponent implements OnInit{
         else{
             $("nav").removeClass("dark_mode");
         }
-    }
-
-    SetPageNav(page_id: string){
-      this.PageChanging.emit(page_id);
-      this.actual_page_nav = page_id;
     }
 
     Dark_mode(){

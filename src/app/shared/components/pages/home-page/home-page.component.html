@@ -1,10 +1,6 @@
-<app-header-image (update_images)="UpdateGalleryImagesHome($event)"
-                  (update_image_index)="UpdateGalleryImageIndexHome($event)"
-                  (PageChanging)="SetPageHome($event)">
+<app-header-image></app-header-image>
+<app-navbar></app-navbar>
 
-</app-header-image>
-<app-navbar (PageChanging)="SetPageHome($event)"
-            [actual_page_nav]="'home'"></app-navbar>
 <div id="home-page-container">
 
     <div class="container">
@@ -14,7 +10,7 @@
         </p>
     </div>
 
-    @if (this.cookies_accepted){
+    @if (cookies_accepted){
         <!-- <br><br>
 
         <div class="container">

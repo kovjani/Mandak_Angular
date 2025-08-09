@@ -1,5 +1,6 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import $ from "jquery";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-header-image',
@@ -9,10 +10,6 @@ import $ from "jquery";
   styleUrl: './header-image.component.scss'
 })
 export class HeaderImageComponent implements OnInit, OnDestroy {
-    @Output() update_images = new EventEmitter<string[]>();
-    @Output() update_image_index = new EventEmitter<number>();
-    @Output() PageChanging = new EventEmitter<string>();
-
     private interval: any;
     home_pictures_i = 1;
     images: string[] = [
@@ -21,6 +18,9 @@ export class HeaderImageComponent implements OnInit, OnDestroy {
         "/assets/images/gallery/4.jpg",
         "/assets/images/gallery/5.jpg"
     ];
+
+    constructor(private router: Router) {
+    }
 
     ngOnInit() {
         $("#header-image-container").css({"background-image": `url("${this.images[0]}")`})
@@ -31,6 +31,7 @@ export class HeaderImageComponent implements OnInit, OnDestroy {
             });
         }, 100);
         this.interval = setInterval(() => this.HomeNext(), 5000);
+
     }
 
     ngOnDestroy() {
@@ -53,9 +54,6 @@ export class HeaderImageComponent implements OnInit, OnDestroy {
     }
 
     ViewInGallery(index: number){
-        console.log("Hello");
-        this.update_images.emit(this.images);
-        this.update_image_index.emit(index);
-        this.PageChanging.emit("gallery");
+        this.router.navigate(['/gallery'], {queryParams: {images: JSON.stringify(this.images), index: index}});
     }
 }
