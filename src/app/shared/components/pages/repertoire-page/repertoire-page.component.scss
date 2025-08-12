@@ -1,8 +1,0 @@
-@import "../../../global";
-:host{
-    position: relative;
-    display: block;
-    overflow-y: auto;
-    scrollbar-color: grey transparent;
-    height: calc(100vh - $navbar-height - $audio-player-height);
-}

@@ -1,0 +1,57 @@
+<nav class="navbar navbar-expand-sm navbar-dark w-100 dark_mode">
+  <div class="container-fluid">
+    <img id="nav-logo" src="/img/logo-small-new.png" alt="logo" class="navbar-brand dark_logo" onclick="Dark_mode()">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mynavbar">
+      <ul class="navbar-nav w-100 d-flex justify-content-center">
+
+        
+
+        <li id="home-nav-item" class="nav-item active nav-link">
+          <!-- <a class="nav-link" href="/">Kezdőlap</a> -->
+           Kezdőlap
+        </li>
+        <li id="gallery-nav-item" class="nav-item nav-link">
+          <!-- <a class="nav-link" href="/galeria?event=-1&image=/events/gallery/1.jpg">Galéria</a> -->
+           Galéria
+        </li>
+        <li id="repertoire-nav-item" class="nav-item nav-link">
+            <!-- <a class="nav-link" href="/repertoar">KincsTár</a> -->
+             KincsTár
+        </li>
+        <li id="events-nav-item" class="nav-item nav-link">
+            <!-- <a class="nav-link" href="/fellepesek">Fellépések</a> -->
+             Fellépések
+        </li>
+        <li id="villa-nav-item" class="nav-item nav-link"> 
+          <!-- <a class="nav-link" href="/kantorkepzo">A Mandák-villa</a> -->
+           A Mandák-villa
+        </li>
+
+        <%if(admin){%>
+          <li id="google_drive-nav-item" class="nav-item">
+            <a class="nav-link" href="/synchronize_google_drive">Beállítások</a>
+          </li>
+        <% } %>
+
+        <%if(user_id){%>
+
+          <li id="logout-nav-item" class="nav-item"> 
+            <a class="nav-link" href="/logout">Kijelentkezés</a>
+          </li>
+
+        <%} else {%>
+
+          <li id="login-nav-item" class="nav-item nav-link"> 
+            <!-- <a class="nav-link" href="/login">Bejelentkezés</a> -->
+             Bejelentkezés
+          </li>
+
+        <% } %>
+
+      </ul>
+    </div>
+  </div>
+</nav>

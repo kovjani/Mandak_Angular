@@ -40,3 +40,99 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+
+
+# SERVER
+
+
+
+# Compiled output
+/server/dist
+/server/tmp
+/server/out-tsc
+/server/bazel-out
+
+# Node
+/server/node_modules
+/server/npm-debug.log
+/server/yarn-error.log
+
+# IDEs and editors
+/server/.idea/
+/server/.project
+/server/.classpath
+/server/.c9/
+/server/*.launch
+/server/.settings/
+/server/*.sublime-workspace
+
+# Visual Studio Code
+/server/.vscode/*
+/server/!.vscode/settings.json
+/server/!.vscode/tasks.json
+/server/!.vscode/launch.json
+/server/!.vscode/extensions.json
+/server/.history/*
+
+# Miscellaneous
+/server/.angular/cache
+/server/.sass-cache/
+/server/connect.lock
+/server/coverage
+/server/libpeerconnection.log
+/server/testem.log
+/server/typings
+
+# System files
+/server/.DS_Store
+/server/Thumbs.db
+
+
+
+# CLIENT
+
+
+
+# Compiled output
+/client/dist
+/client/tmp
+/client/out-tsc
+/client/bazel-out
+
+# Node
+/client/node_modules
+/client/npm-debug.log
+/client/yarn-error.log
+
+# IDEs and editors
+/client/.idea/
+/client/.project
+/client/.classpath
+/client/.c9/
+/client/*.launch
+/client/.settings/
+/client/*.sublime-workspace
+
+# Visual Studio Code
+/client/.vscode/*
+/client/!.vscode/settings.json
+/client/!.vscode/tasks.json
+/client/!.vscode/launch.json
+/client/!.vscode/extensions.json
+/client/.history/*
+
+# Miscellaneous
+/client/.angular/cache
+/client/.sass-cache/
+/client/connect.lock
+/client/coverage
+/client/libpeerconnection.log
+/client/testem.log
+/client/typings
+
+# System files
+/client/.DS_Store
+/client/Thumbs.db
+
+/client/src/assets/events/

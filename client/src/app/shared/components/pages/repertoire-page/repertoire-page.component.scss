@@ -1,0 +1,80 @@
+@import "../../../global";
+:host{
+    position: relative;
+    display: block;
+    overflow-y: auto;
+    scrollbar-color: grey transparent;
+    height: calc(100vh - $navbar-height - $audio-player-height);
+}
+
+.list-item{
+    border-bottom: solid gray 1px;
+    padding: 1em;
+    padding-bottom: 0;
+    &:hover{
+        cursor: pointer;
+    }
+}
+.list-item *:not(li, .title, audio, label){
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+@media only screen and (max-width: 50em) {
+    #repertoire_list_container{
+        min-width: 0 !important;
+        max-width: fit-content;
+        margin: auto;
+    }
+}
+#repertoire_list_container{
+    min-width: 50em;
+    max-width: fit-content;
+    min-height: 100vh;
+    margin: 1em auto;
+    position: relative;
+    top: 4em;
+}
+#repertoire_search{
+    position: relative;
+}
+.title{
+    font-weight: bold;
+    margin: 0;
+    &:hover{
+        text-decoration: underline;
+    }
+}
+.repertoire_place{
+    color:grey;
+    margin-bottom: 0;
+    font-weight: bold;
+}
+.music_information{
+    display: none;
+    margin: 0 !important;
+}
+.music_list li, .author_names_list li{
+    list-style-type: none;
+    margin-bottom: 2em;
+    margin-left: 1em;
+}
+ul{
+    padding-left: 1em;
+}
+#no_result_container{
+    padding: 1em;
+    padding-left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#no_result{
+    color: grey;
+    font-weight: bold;
+    margin: inherit;
+    text-align: center !important;
+    text-decoration: none;
+}
+.current-audio{
+    color: $mandak-green;
+}
