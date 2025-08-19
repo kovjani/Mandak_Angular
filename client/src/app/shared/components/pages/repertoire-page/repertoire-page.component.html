@@ -1,29 +1,28 @@
-
-
-    <div id="repertoire_list_container" class="container">
-        <div id='repertoire_list'>
-            @for (music of music_list; track music.getMusicId()) {
-                <div class="list-item" (click)="PlayMusicList(music_list, music_list.indexOf(music))">
-                    @if (music.getMusicAuthor() !== "") {
-                        <p [id]='"repertoire_title_" + music_list.indexOf(music)'
-                           [ngClass] = "{'current-audio': 'repertoire_title_' + music_list.indexOf(music) === sessionStorage.getItem('current_audio_html_id')}"
-                           class = "title">{{music.getMusicAuthor() + ": " + music.getMusicTitle()}}</p>
-                    } @else {
-                        <p [id]='"repertoire_title_" + music_list.indexOf(music)'
-                           [ngClass] = "{'current-audio': 'repertoire_title_' + music_list.indexOf(music) === sessionStorage.getItem('current_audio_html_id')}"
-                           class = "title">{{music.getMusicTitle()}}</p>
-                    }
-                    <div class="repertoire_place">
-                        {{music.getMusicEvent().getEventPlace() + " (" + music.getMusicEventDateStr() + ")"}}
-                    </div>
+<div id="repertoire_list_container" class="container">
+    <div id='repertoire_list'>
+        @for (music of music_list; track $index) {
+            <div class="list-item" (click)="PlayMusicList(music_list, $index)">
+                @if (music.music_author !== "") {
+                    <p [id]='"repertoire_title_" + music.music_id'
+                       [ngClass] = "{'current-audio': 'repertoire_title_' + music.music_id === sessionStorage.getItem('current_audio_html_id')}"
+                       class = "title">{{music.music_author + ": " + music.music_title}}</p>
+                } @else {
+                    <p [id]='"repertoire_title_" + music.music_id'
+                       [ngClass] = "{'current-audio': 'repertoire_title_' + music.music_id === sessionStorage.getItem('current_audio_html_id')}"
+                       class = "title">{{music.music_title}}</p>
+                }
+                <div class="repertoire_place">
+                    {{music.music_event.event_place + " (" + music.music_event.event_date_str + ")"}}
                 </div>
-            } @empty {
-                <div id='no_result_container'>
-                    <p id='no_result'>A keresésnek nincsen eredménye.</p>
-                </div>
-            }
-        </div>
+            </div>
+        } @empty {
+            <div id='no_result_container'>
+                <p id='no_result'>A keresésnek nincsen eredménye.</p>
+            </div>
+        }
     </div>
+</div>
 
 <br><br>
+
 <app-footer></app-footer>

@@ -2,32 +2,37 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import {MusicDTO} from "../models/MusicDTO";
 
-export interface PlayParams{
-    music: MusicDTO;
-    music_index: number;
+export interface MusicListParams{
+    musicList: MusicDTO[];
+    actualMusicIndex: number;
 }
 
 @Injectable({providedIn: 'root'})
 export class AudioPlayerService {
 
-    private playAudioSource = new Subject<PlayParams>();
-    playAudio$ = this.playAudioSource.asObservable();
+    private playMusicListSource = new Subject<MusicListParams>();
+    private setMusicListSource = new Subject<MusicListParams>();
+    private audioPlayerShowingSource = new Subject<void>();
+    private audioPlayerHidingSource = new Subject<void>();
 
-    PlayAudio(params: PlayParams) {
-        this.playAudioSource.next(params);
+    playMusicList$ = this.playMusicListSource.asObservable();
+    setMusicList$ = this.setMusicListSource.asObservable();
+    audioPlayerShowing$ = this.audioPlayerShowingSource.asObservable();
+    audioPlayerHiding$ = this.audioPlayerHidingSource.asObservable();
+
+    PlayMusicList(params: MusicListParams) {
+        this.playMusicListSource.next(params);
     }
 
-    private AudioPlayerShowingSource = new Subject<void>();
-    AudioPlayerShowing$ = this.AudioPlayerShowingSource.asObservable();
+    SetMusicList(params: MusicListParams) {
+        this.setMusicListSource.next(params);
+    }
 
     ShowAudioPlayer(){
-        this.AudioPlayerShowingSource.next();
+        this.audioPlayerShowingSource.next();
     }
 
-    private AudioPlayerHidingSource = new Subject<void>();
-    AudioPlayerHiding$ = this.AudioPlayerHidingSource.asObservable();
-
     HideAudioPlayer(){
-        this.AudioPlayerHidingSource.next();
+        this.audioPlayerHidingSource.next();
     }
 }

@@ -2,7 +2,7 @@ import $ from "jquery";
 import {Component, OnInit, OnDestroy, HostBinding, ViewChild, ElementRef, AfterViewInit} from '@angular/core';
 import {MusicDTO} from "../../models/MusicDTO";
 import {Subscription} from "rxjs";
-import {AudioPlayerService, PlayParams} from "../../services/audio-player.service";
+import {AudioPlayerService, MusicListParams} from "../../services/audio-player.service";
 
 @Component({
   selector: 'app-audio-player',
@@ -18,21 +18,25 @@ export class AudioPlayerComponent implements OnInit, OnDestroy, AfterViewInit{
     @ViewChild('seekbar') seekbar!: ElementRef<HTMLInputElement>;
     @ViewChild('duration') duration!: ElementRef<HTMLSpanElement>;
 
-    private playAudioSubscription!: Subscription;
-    private AudioPlayerShowingSubscription!: Subscription;
-    private AudioPlayerHidingSubscription!: Subscription;
+    private playMusicListSubscription!: Subscription;
+    private setMusicListSubscription!: Subscription;
+    private audioPlayerShowingSubscription!: Subscription;
+    private audioPlayerHidingSubscription!: Subscription;
     private audio_player_hidden: boolean = false;
 
-    constructor(private audioService: AudioPlayerService) {}
+    constructor(private audioService: AudioPlayerService, private host: ElementRef) {}
 
     ngOnInit() {
-        this.playAudioSubscription = this.audioService.playAudio$.subscribe((params: PlayParams) => {
-            this.play(params);
+        this.playMusicListSubscription = this.audioService.playMusicList$.subscribe((params: MusicListParams) => {
+            this.PlayMusicList(params);
         });
-        this.AudioPlayerShowingSubscription = this.audioService.AudioPlayerShowing$.subscribe(() => {
+        this.setMusicListSubscription = this.audioService.setMusicList$.subscribe((params: MusicListParams) => {
+            this.SetMusicList(params);
+        });
+        this.audioPlayerShowingSubscription = this.audioService.audioPlayerShowing$.subscribe(() => {
             this.ShowAudioPlayer();
         });
-        this.AudioPlayerHidingSubscription = this.audioService.AudioPlayerHiding$.subscribe(() => {
+        this.audioPlayerHidingSubscription = this.audioService.audioPlayerHiding$.subscribe(() => {
             this.HideAudioPlayer();
         });
     }
@@ -61,8 +65,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy, AfterViewInit{
             let value = (100 / this.audio_player.nativeElement.duration) * this.audio_player.nativeElement.currentTime;
             this.seekbar.nativeElement.value = value.toString();
 
-
-
             // Update the styles of the music using CSS letiables
             document.documentElement.style.setProperty('--seek-bar-percentage', value + '%');
 
@@ -76,7 +78,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy, AfterViewInit{
 
         // Update the duration display once the audio metadata is loaded
         this.audio_player.nativeElement.onloadedmetadata = () => {
-            console.log("Hello")
             let totalMinutes:number = Math.floor(this.audio_player.nativeElement.duration / 60);
             let totalSeconds:number = Math.floor(this.audio_player.nativeElement.duration % 60);
             let totalSecondsStr:string = totalSeconds.toString();
@@ -94,32 +95,83 @@ export class AudioPlayerComponent implements OnInit, OnDestroy, AfterViewInit{
     }
 
     ngOnDestroy() {
-        this.playAudioSubscription.unsubscribe();
-        this.AudioPlayerShowingSubscription.unsubscribe();
-        this.AudioPlayerHidingSubscription.unsubscribe();
+        this.playMusicListSubscription.unsubscribe();
+        this.setMusicListSubscription.unsubscribe();
+        this.audioPlayerShowingSubscription.unsubscribe();
+        this.audioPlayerHidingSubscription.unsubscribe();
     }
 
-    play(params: PlayParams) {
-        let music = params.music;
-        let music_index = params.music_index;
+    SetMusicList(params: MusicListParams){
+        this.SetMusic(params);
 
-        $('#pauseButton').trigger('click');
-        this.audio_player.nativeElement.src = music.getMusicAudio();
-        $('#playButton').trigger('click');
+        $("#audio_player").off().on('ended', () => {
+            if(params.actualMusicIndex < params.musicList.length - 1){
+                params.actualMusicIndex++;
+                this.PlayMusic(params);
+            }
+        });
 
-        if(music.getMusicAuthor() !== "") {
-            $("#audio_title").text(music.getMusicAuthor() + ": " + music.getMusicTitle());
+        $("#playNextButton").off().on('click', () => {
+            if(params.actualMusicIndex < params.musicList.length - 1){
+                params.actualMusicIndex++;
+                this.PlayMusic(params);
+            }
+        });
+
+        $("#playPreviousButton").off().on('click', () => {
+            if(params.actualMusicIndex > 0){
+                params.actualMusicIndex--;
+                this.PlayMusic(params);
+            }
+        });
+    }
+
+    SetMusic(params: MusicListParams){
+        let musicList = params.musicList;
+        let actualMusicIndex = params.actualMusicIndex;
+        let actualMusic = musicList[actualMusicIndex];
+        let musicEvent = actualMusic.music_event;
+
+        this.audio_player.nativeElement.src = actualMusic.music_audio;
+
+        if(actualMusic.music_author !== "") {
+            $("#audio_title").text(actualMusic.music_author + ": " + actualMusic.music_title);
         }
         else {
-            $("#audio_title").text(music.getMusicTitle());
+            $("#audio_title").text(actualMusic.music_title);
         }
 
-        $("#audio_event").text(`${music.getMusicEventPlace()} (${music.getMusicEventDateStr()})`);
+        $("#audio_event").text(`${musicEvent.event_place} (${musicEvent.event_date_str})`);
+
+        $(".title").removeClass("current-audio");
+        $(".events_music_title").removeClass("current-audio");
+
+        let current_audio_from = sessionStorage.getItem("current_audio_from");
+        if(current_audio_from === "repertoire") {
+            $(`#repertoire_title_${actualMusic.music_id}`).addClass("current-audio");
+        } else if(current_audio_from === "events"){
+            $(`#music_${actualMusic.music_id}_${musicEvent.event_id}`).addClass("current-audio");
+        }
+    }
+
+    PlayMusicList(params: MusicListParams): void {
+        this.SetMusicList(params);
+        this.PlayMusic(params);
+    }
+
+    PlayMusic(params: MusicListParams) {
+        let musicList = params.musicList;
+        let actualMusicIndex = params.actualMusicIndex;
+        let actualMusic = musicList[actualMusicIndex];
+
+        $('#pauseButton').trigger('click');
+        this.SetMusic(params);
+        $('#playButton').trigger('click');
     }
 
     ShowAudioPlayer() {
         this.audio_player_hidden = false;
-        $("#audio-player-component").stop(true, true).animate({
+        $(this.host.nativeElement).stop(true, true).animate({
             bottom: 0
         });
         $("#main-page-component").addClass("main-page-audio-player-hidden");
@@ -127,55 +179,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy, AfterViewInit{
 
     HideAudioPlayer() {
         this.audio_player_hidden = true;
-        $("#audio-player-component").stop(true, true).animate({
+        $(this.host.nativeElement).stop(true, true).animate({
             bottom: '-7em'
         });
         $("#main-page-component").removeClass("main-page-audio-player-hidden");
     }
-
-    /*public PlayEventMusicList(music_list: Music[], music_index: number, event_index: number): void {
-        this.PlayAudio(music_list[music_index], music_index);
-
-        $(".title").css("color", "black");
-        $(".events_music_title").css("color", "black");
-        $(`#music_${music_index}_${event_index}`).css("color", "#8fb514");
-
-        // Remove handlers.
-        $("#audio_player").off();
-        $("#playNextButton").off();
-        $("#playPreviousButton").off();
-
-        $("#audio_player").on('ended', () => {
-            if(music_index < music_list.length - 1){
-                music_index++;
-                this.PlayAudio(music_list[music_index], music_index);
-
-                $(".title").css("color", "black");
-                $(".events_music_title").css("color", "black");
-                $(`#music_${music_index}_${event_index}`).css("color", "#8fb514");
-            }
-        });
-
-        $("#playNextButton").click(() => {
-            if(music_index < music_list.length - 1){
-                music_index++;
-                this.PlayAudio(music_list[music_index], music_index);
-
-                $(".title").css("color", "black");
-                $(".events_music_title").css("color", "black");
-                $(`#music_${music_index}_${event_index}`).css("color", "#8fb514");
-            }
-        });
-
-        $("#playPreviousButton").click(() => {
-            if(music_index > 0){
-                music_index--;
-                this.PlayAudio(music_list[music_index], music_index);
-
-                $(".title").css("color", "black");
-                $(".events_music_title").css("color", "black");
-                $(`#music_${music_index}_${event_index}`).css("color", "#8fb514");
-            }
-        });
-    }*/
 }

@@ -21,4 +21,11 @@
 .search_btn{
   background: none;
   border: none;
+    margin: 0 0.5em;
+}
+
+@media only screen and (max-width: 700px) {
+    #searchbar_outside_container{
+        width: 100%;
+    }
 }

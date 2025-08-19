@@ -1,9 +1,10 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { NavbarComponent } from "./shared/components/navbar/navbar.component";
 import { SearchbarComponent } from "./shared/components/searchbar/searchbar.component";
 import {AudioPlayerComponent} from "./shared/components/audio-player/audio-player.component";
 import {CookieWarningComponent} from "./shared/components/cookie-warning/cookie-warning.component";
 import {Router, RouterOutlet} from "@angular/router";
+import $ from "jquery";
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,7 @@ import {Router, RouterOutlet} from "@angular/router";
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent{
+export class AppComponent implements OnInit{
     title = 'Mandak_angular';
 
     cookies_accepted = localStorage.getItem("cookies_accepted") === 'true';
@@ -23,5 +24,12 @@ export class AppComponent{
         this.router.events.subscribe(() => {
             this.actual_page = this.router.url;
         });
+    }
+
+    ngOnInit() {
+        setTimeout(() => {
+            $(".title").removeClass("current-audio");
+            $(".events_music_title").removeClass("current-audio");
+        }, 100);
     }
 }

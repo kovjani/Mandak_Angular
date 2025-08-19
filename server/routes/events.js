@@ -1,4 +1,4 @@
-module.exports = function (app, mysql) {
+module.exports = function (app, mysql, fs) {
 app.post('/events_data', function(request, response) {
 
         if(request.body.search_item === undefined){
@@ -78,7 +78,7 @@ app.post('/events_data', function(request, response) {
             database: 'mandak'
         });
 
-        db.query(`SELECT repertoire.id, repertoire.title, repertoire.author FROM repertoire
+        db.query(`SELECT DISTINCT repertoire.* FROM repertoire
                     LEFT OUTER JOIN music_to_events
                     ON music_to_events.music = repertoire.id
                     WHERE music_to_events.event = ?
@@ -89,5 +89,82 @@ app.post('/events_data', function(request, response) {
             response.send(result);
             db.end();
         });
+    });
+
+    app.post('/get_local_images', async (request, response) => {
+
+        if(isNaN(request.body.event_id)){
+            response.end();
+            return;
+        }
+
+        var db = mysql.createConnection({
+            host: '127.0.0.1',
+            user: 'everybody',
+            password: '',
+            database: 'mandak'
+        });
+
+        let event_id = request.body.event_id;
+
+        if(parseInt(event_id) === -2){
+            //home gallery
+            let images = [];
+            let folder = `./public/img/mandakhaz/`;
+
+            await fs.readdirSync(folder).forEach(file => {
+                images.push({
+                    "image": `/img/mandakhaz/${file}`,
+                    "name": file
+                });
+            });
+
+            response.send(images);
+        }else if(parseInt(event_id) === -1){
+            //home gallery
+            let images = [];
+            let folder = `./public/events/gallery/`;
+
+            await fs.readdirSync(folder).forEach(file => {
+                images.push({
+                    "image": `/events/gallery/${file}`,
+                    "name": file
+                });
+            });
+
+            response.send(images);
+        }else{
+            //events gallery
+            db.query(`SELECT local_folder FROM events WHERE id = ?`,
+                [parseInt(event_id)], async (err, events_result) => {
+                    if(err) throw err;
+
+                    if(events_result[0].local_folder === null || events_result[0].local_folder === ''){
+                        response.end();
+                        db.end();
+                        return;
+                    }
+
+                    let images = [];
+                    // let folder = `/assets/events/${events_result[0].local_folder}/images/`;
+                    let folder = `../client/src/assets/events/${events_result[0].local_folder}/images/`;
+
+                    try {
+                        await fs.readdirSync(folder).forEach(file => {
+                            images.push({
+                                "image_url": `/events/${events_result[0].local_folder}/images/${file}`,
+                                "image_name": file
+                            });
+                        });
+                        response.send(images);
+                    } catch (error){
+                        console.log(error);
+                        response.send([]);
+                    } finally {
+                        db.end();
+                    }
+
+                });
+        }
     });
 }

@@ -1,33 +1,83 @@
-<p>Events page</p>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
-<div style="height: 10vh" ></div>
+
+<div id="events_list_container" class="container">
+    <div id="events_list">
+        @for (event_item of events_list; track $index){
+            <div class="list-item">
+                @let cover_image = event_item.event_cover_image;
+                @let cover_image_exist = cover_image !== null && cover_image !== "" && cover_image !== "default";
+
+                <div #cover class="cover"
+                     [ngClass]="{'cover-with-image' : cover_image_exist}"
+                     [style.background-image]="cover_image_exist ?
+                        GetImageUrl(cover_image) :
+                        'url(/assets/images/default_cover.jpg)'"
+                     (click)="CoverClicked(details, cover, title_place_date, event_item)"
+                     (mouseenter)="cover_hover_index=$index"
+                     (mouseleave)="cover_hover_index=null">
+
+                    <div #title_place_date class="title_place_date"
+                         [ngClass]="{'title_place_date-with-image' : cover_image_exist}">
+                        <div class="event_title"
+                            [style.text-decoration]="cover_hover_index === $index ? 'underline' : 'none'">
+                            {{event_item.event_title}}
+                        </div>
+                        <div class="place_date d-lg-flex justify-content-lg-between align-items-lg-end" >
+                            <div class="place" >{{event_item.event_place}}</div>
+                            <div class="time" >{{event_item.event_date_str}}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div #details class="details">
+                    @if(event_item.event_description !== null && event_item.event_description.length > 1){
+                        <p class="description"
+                           [innerHTML]="event_item.event_description.replace('\n', '<br>')"></p>
+                    }
+                    @let event_images = event_item.event_images;
+                    @if(event_images.length > 0){
+                        <div class="images_container">
+                            <div class="row">
+                                <h6 class="label" style="padding-left: 1em">Képek</h6>
+                                @for (image of event_images; track $index){
+                                    <div class="col image_div"
+                                         [style.background-image]= GetImageUrl(image)
+                                         (click)="ViewInGallery(event_images, $index)">
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    @let music_list = event_item.event_music_list;
+                    @if(music_list.length > 0){
+                        <ul class="music_list">
+                            <h6 class="label">Művek</h6>
+                                @for (music of music_list; track $index){
+                                    <li (click)="PlayMusicList(events_list.indexOf(event_item), $index)" >
+                                        @if (music.music_author !== "") {
+                                            <p [id]="'music_' + music.music_id + '_' + event_item.event_id"
+                                               class = "events_music_title"
+                                               [ngClass]="{'current-audio': 'music_' + music.music_id + '_' + event_item.event_id === sessionStorage.getItem('current_audio_html_id')}">
+                                                {{music.music_author + ": " + music.music_title}}</p>
+                                        } @else {
+                                            <p [id]="'music_' + music.music_id + '_' + event_item.event_id"
+                                               class = "events_music_title"
+                                               [ngClass]="{'current-audio': 'music_' + music.music_id + '_' + event_item.event_id === sessionStorage.getItem('current_audio_html_id')}">
+                                                {{music.music_title}}</p>
+                                        }
+                                    </li>
+                                }
+                        </ul>
+                    }
+                </div>
+
+            </div>
+        } @empty {
+            <div id='no_result_container'>
+                <p id='no_result'>A keresésnek nincsen eredménye.</p>
+            </div>
+        }
+    </div>
+</div>
 
 
 <app-footer></app-footer>

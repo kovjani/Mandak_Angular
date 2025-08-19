@@ -20,7 +20,7 @@ module.exports = (app, mysql) => {
             let splitted_search_item = request.body.search_item.split(':');
             author = splitted_search_item[0].trim();
             title = splitted_search_item[1].trim();
-            query = `SELECT DISTINCT repertoire.*, events.id AS event_id, events.date, events.place, events.local_folder
+            query = `SELECT DISTINCT repertoire.id AS music_id, repertoire.*, events.id AS event_id, events.*
             FROM repertoire
             LEFT OUTER JOIN events ON repertoire.best_music_event = events.id
             WHERE author LIKE ?
@@ -30,7 +30,7 @@ module.exports = (app, mysql) => {
         else{
             author = request.body.search_item;
             title = request.body.search_item;
-            query = `SELECT repertoire.*, events.id AS event_id, events.date, events.place, events.local_folder
+            query = `SELECT DISTINCT repertoire.id AS music_id, repertoire.*, events.id AS event_id, events.*
             FROM repertoire
             LEFT OUTER JOIN events ON repertoire.best_music_event = events.id
             WHERE author LIKE ?

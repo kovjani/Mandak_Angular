@@ -3,7 +3,7 @@ import {SearchbarService} from "../../../services/searchbar.service";
 import {AudioPlayerService} from "../../../services/audio-player.service";
 import $ from 'jquery';
 import {FooterComponent} from "../../footer/footer.component";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-gallery-page',
@@ -15,6 +15,7 @@ import {ActivatedRoute} from "@angular/router";
   styleUrl: './gallery-page.component.scss'
 })
 export class GalleryPageComponent implements OnInit{
+
     image_index = 0;
     images = [
         "/assets/images/gallery/1.jpg",
@@ -23,12 +24,21 @@ export class GalleryPageComponent implements OnInit{
         "/assets/images/gallery/5.jpg"
     ];
 
-    constructor(private route: ActivatedRoute, private searchbarService: SearchbarService, private audioService: AudioPlayerService) {}
+    constructor(private route: ActivatedRoute,
+                private router: Router,
+                private searchbarService: SearchbarService,
+                private audioService: AudioPlayerService) {}
 
     ngOnInit() {
 
         let images_str = this.route.snapshot.queryParamMap.get("images");
         let index_str = this.route.snapshot.queryParamMap.get("index");
+
+        this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: {},
+            replaceUrl: true
+        });
 
         if(images_str !== null && index_str !== null){
             sessionStorage.setItem('images_str', images_str);

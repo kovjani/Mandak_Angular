@@ -49,7 +49,7 @@ app.use((req, res, next) => {
 // require('./routes/routes')(app, fs);
 require('./routes/data')(app, mysql, fs);
 require('./routes/repertoire')(app, mysql);
-require('./routes/events')(app, mysql);
+require('./routes/events')(app, mysql, fs);
 // require('./routes/registration')(app, mysql, bcrypt);
 require('./routes/login')(app, mysql, bcrypt);
 

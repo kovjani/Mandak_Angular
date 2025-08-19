@@ -351,7 +351,7 @@ module.exports = function (app, mysql, fs) {
         );
     });*/
 
-    app.post('/get_local_images', async (request, response) => {
+    /*app.post('/get_local_images', async (request, response) => {
 
         if(isNaN(request.body.event_id)){
             response.end();
@@ -419,7 +419,7 @@ module.exports = function (app, mysql, fs) {
                 db.end();
             });
         }
-    });
+    });*/
 
     app.post('/get_local_audio', (request, response) => {
 

@@ -4,14 +4,6 @@ import { Event } from "../../models/Event";
 import { PlayEventMusicList } from "../main/audio_player"
 import { GallerySetPicture } from "./gallery";
 
-
-$(document).on('keypress', function(e){
-    //enter
-    if(e.which == 13){
-        $("#events_search_btn").click();
-    }
-});
-
 export function EventsSearch(item: string){
     $.post("/events_data", {search_item: item}, function(events_result){ 
 

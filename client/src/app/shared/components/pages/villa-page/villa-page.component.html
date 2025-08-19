@@ -34,8 +34,8 @@
     </div>
 
     <div id="villa_images_container">
-        @for (image of images; track image){
-            <img class="mandak_villa_image" [src]="image" (click)="ViewInGallery(images.indexOf(image))">
+        @for (image of images; track $index){
+            <img class="mandak_villa_image" [src]="image" (click)="ViewInGallery($index)">
         }
     </div>
 </div>

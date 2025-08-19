@@ -2,60 +2,65 @@ import { EventDTO } from "./EventDTO";
 
 export class MusicDTO {
 
-    private music_id: number;
-    private music_title: string;
-    private music_author: string = "";
-    private music_audio: string; // The audio file.
-    private music_event: EventDTO;
+    private _music_id: number;
+    private _music_title: string;
+    private _music_author: string = "";
+    private _music_audio: string; // The audio file.
+    private _music_event: EventDTO;
 
     //public constructor(music_id: number, music_title: string);
     public constructor(music_id: number, music_title: string, music_event: EventDTO, music_author?: string) {
-        this.music_id = music_id;
-        this.music_title = music_title;
-        this.music_event = music_event;
+        this._music_id = music_id;
+        this._music_title = music_title;
+        this._music_event = music_event;
 
         if(music_author){
-            this.music_author = music_author;
-            this.music_audio = `/assets/events/${music_event.getEventFolder()}/audio/${music_author}_${music_title}.mp3`;
+            this._music_author = music_author;
+            this._music_audio = `/assets/events/${music_event.event_folder}/audio/${music_author}_${music_title}.mp3`;
         } else {
-            this.music_audio = `/assets/events/${music_event.getEventFolder()}/audio/${music_title}.mp3`;
+            this._music_audio = `/assets/events/${music_event.event_folder}/audio/${music_title}.mp3`;
         }
 
     }
 
-    public getMusicId(): number {
-        return this.music_id;
+
+    get music_id(): number {
+        return this._music_id;
     }
 
-    public getMusicTitle(): string {
-        return this.music_title;
+    set music_id(value: number) {
+        this._music_id = value;
     }
 
-    public getMusicAuthor(): string {
-        return this.music_author;
+    get music_title(): string {
+        return this._music_title;
     }
 
-    public getMusicAudio(): string {
-        return this.music_audio;
+    set music_title(value: string) {
+        this._music_title = value;
     }
 
-    public getMusicEvent(): EventDTO {
-        return this.music_event;
+    get music_author(): string {
+        return this._music_author;
     }
 
-    public getMusicEventPlace(): string {
-        return this.music_event.getEventPlace();
+    set music_author(value: string) {
+        this._music_author = value;
     }
 
-    public getMusicEventDate(): Date {
-        return this.music_event.getEventDate();
+    get music_audio(): string {
+        return this._music_audio;
     }
 
-    public getMusicEventDateStr(): string {
-        return this.music_event.getEventDateStr();
+    set music_audio(value: string) {
+        this._music_audio = value;
     }
 
-    public getMusicEventFolder(): string {
-        return this.music_event.getEventFolder();
+    get music_event(): EventDTO {
+        return this._music_event;
+    }
+
+    set music_event(value: EventDTO) {
+        this._music_event = value;
     }
 }
