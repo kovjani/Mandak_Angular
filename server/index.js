@@ -7,6 +7,7 @@ const mysql = require('mysql');
 const bcrypt = require("bcryptjs");
 const session = require('express-session');
 const app = express();
+const apiRouter = express.Router();
 //var bodyParser = require('body-parser');
 
 //app.use(bodyParser.urlencoded({extended: true}));
@@ -47,12 +48,13 @@ app.use((req, res, next) => {
 //require('./routes/google')();
 
 // require('./routes/routes')(app, fs);
-require('./routes/data')(app, mysql, fs);
-require('./routes/repertoire')(app, mysql);
-require('./routes/events')(app, mysql, fs);
+require('./routes/data')(apiRouter, mysql, fs);
+require('./routes/repertoire')(apiRouter, mysql);
+require('./routes/events')(apiRouter, mysql, fs);
 // require('./routes/registration')(app, mysql, bcrypt);
-require('./routes/login')(app, mysql, bcrypt);
+require('./routes/login')(apiRouter, mysql, bcrypt);
 
+app.use('/api', apiRouter);
 
 // app.set('view engine', 'ejs');
 

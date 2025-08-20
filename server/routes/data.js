@@ -1,6 +1,6 @@
 //const { auth } = require('googleapis/build/src/apis/abusiveexperiencereport');
 
-module.exports = function (app, mysql, fs) {
+module.exports = function (apiRouter, mysql, fs) {
 
     // Google drive
 
@@ -18,7 +18,7 @@ module.exports = function (app, mysql, fs) {
     //const drive = google.drive({ version: 'v3', auth: oAuth2Client });
 
 
-    /*app.post('/repertoire_data', function(request, response) {
+    /*apiRouter.post('/repertoire_data', function(request, response) {
 
         if(request.body.search_item === undefined){
             response.end();
@@ -67,7 +67,7 @@ module.exports = function (app, mysql, fs) {
         });
     });*/
 
-    /*app.post('/events_data', function(request, response) {
+    /*apiRouter.post('/events_data', function(request, response) {
 
         if(request.body.search_item === undefined){
             response.end();
@@ -130,7 +130,7 @@ module.exports = function (app, mysql, fs) {
         }
     });*/
 
-    app.post('/events_to_music', function(request, response){
+    apiRouter.post('/events_to_music', function(request, response){
 
         if(request.body.music_id === undefined){
             response.end();
@@ -157,7 +157,7 @@ module.exports = function (app, mysql, fs) {
         });
     });
 
-    /*app.post('/music_to_events', function(request, response){
+    /*apiRouter.post('/music_to_events', function(request, response){
 
         if(request.body.event === undefined){
             response.end();
@@ -185,7 +185,7 @@ module.exports = function (app, mysql, fs) {
     });*/
 
     //get the best track from the music which has been recorded during an event
-    app.post('/get_best_music', (request, response) => {
+    apiRouter.post('/get_best_music', (request, response) => {
 
         if(request.body.music === undefined){
             response.end();
@@ -212,7 +212,7 @@ module.exports = function (app, mysql, fs) {
     });
 
     //get the author's surname (for order)
-    app.post('/get_surname', (request, response) => {
+    apiRouter.post('/get_surname', (request, response) => {
 
         if(request.body.music === undefined){
             response.end();
@@ -237,7 +237,7 @@ module.exports = function (app, mysql, fs) {
         );
     });
 
-    app.post('/insert_surname', (request, response) => {
+    apiRouter.post('/insert_surname', (request, response) => {
 
         let author = request.body.author;
         let surname = request.body.surname;
@@ -265,7 +265,7 @@ module.exports = function (app, mysql, fs) {
         );
     });
 
-    app.post('/insert_best_music', (request, response) => {
+    apiRouter.post('/insert_best_music', (request, response) => {
 
         if(!request.session.admin || request.body.event_id === undefined || request.body.music_id === undefined){
             response.end();
@@ -293,7 +293,7 @@ module.exports = function (app, mysql, fs) {
         );
     });
 
-    app.post('/insert_best_image', (request, response) => {
+    apiRouter.post('/insert_best_image', (request, response) => {
 
         if(!request.session.admin || request.body.event_id === undefined || request.body.cover_image === undefined){
             response.end();
@@ -322,7 +322,7 @@ module.exports = function (app, mysql, fs) {
 
     });
 
-    /*app.post('/get_images_drive_folder', (request, response) => {
+    /*apiRouter.post('/get_images_drive_folder', (request, response) => {
 
         if(request.body.event_id === undefined){
             response.end();
@@ -351,7 +351,7 @@ module.exports = function (app, mysql, fs) {
         );
     });*/
 
-    /*app.post('/get_local_images', async (request, response) => {
+    /*apiRouter.post('/get_local_images', async (request, response) => {
 
         if(isNaN(request.body.event_id)){
             response.end();
@@ -421,7 +421,7 @@ module.exports = function (app, mysql, fs) {
         }
     });*/
 
-    app.post('/get_local_audio', (request, response) => {
+    apiRouter.post('/get_local_audio', (request, response) => {
 
         if(request.body.event_id === undefined){
             response.end();
@@ -463,7 +463,7 @@ module.exports = function (app, mysql, fs) {
         );
     });
     
-    app.post('/synchronize_google_drive', async function(request, response){
+    apiRouter.post('/synchronize_google_drive', async function(request, response){
 
         if(!request.session.admin){
             response.end();
@@ -692,7 +692,7 @@ module.exports = function (app, mysql, fs) {
         });
     }
 
-    /*app.post('/get_images', (request, response) => {
+    /*apiRouter.post('/get_images', (request, response) => {
 
         if(request.body.event_id === undefined){
             response.end();

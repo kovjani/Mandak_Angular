@@ -1,5 +1,5 @@
-module.exports = (app, mysql) => {
-    app.post('/repertoire_data', (request, response) => {
+module.exports = (apiRouter, mysql) => {
+    apiRouter.post('/repertoire_data', (request, response) => {
 
         if(request.body.search_item === undefined){
             response.end();

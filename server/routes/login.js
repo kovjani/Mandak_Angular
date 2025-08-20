@@ -1,5 +1,5 @@
-module.exports = function (app, mysql, bcrypt) {
-    app.post('/auth/login', function(request, response, next){
+module.exports = function (apiRouter, mysql, bcrypt) {
+    apiRouter.post('/auth/login', function(request, response, next){
 
         var username = request.body.username;
         var user_password = request.body.password;
@@ -53,7 +53,7 @@ module.exports = function (app, mysql, bcrypt) {
 
     });
     
-    app.get('/logout', function(request, response, next){
+    apiRouter.get('/logout', function(request, response, next){
 
         request.session.destroy();
         response.redirect("/");

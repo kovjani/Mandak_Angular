@@ -1,5 +1,5 @@
-module.exports = function (app, mysql, fs) {
-app.post('/events_data', function(request, response) {
+module.exports = function (apiRouter, mysql, fs) {
+apiRouter.post('/events_data', function(request, response) {
 
         if(request.body.search_item === undefined){
             response.end();
@@ -62,7 +62,7 @@ app.post('/events_data', function(request, response) {
         }
     });
 
-    app.post('/music_to_event', function(request, response){
+    apiRouter.post('/music_to_event', function(request, response){
 
         if(request.body.event_id === undefined ){
             response.end();
@@ -91,7 +91,7 @@ app.post('/events_data', function(request, response) {
         });
     });
 
-    app.post('/get_local_images', async (request, response) => {
+    apiRouter.post('/get_local_images', async (request, response) => {
 
         if(isNaN(request.body.event_id)){
             response.end();
