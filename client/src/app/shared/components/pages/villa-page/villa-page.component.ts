@@ -13,7 +13,7 @@ import {Router} from "@angular/router";
   templateUrl: './villa-page.component.html',
   styleUrl: './villa-page.component.scss'
 })
-export class VillaPageComponent implements OnInit {
+export class VillaPageComponent {
 
     images = [
         "/assets/images/villa/1.jpg",
@@ -37,12 +37,7 @@ export class VillaPageComponent implements OnInit {
     ];
 
 
-    constructor(private searchbarService: SearchbarService, private audioService: AudioPlayerService, private router: Router) {}
-
-    ngOnInit() {
-        this.searchbarService.HideSearchbar();
-        this.audioService.HideAudioPlayer();
-    }
+    constructor(private router: Router) {}
 
     ViewInGallery(index: number){
         this.router.navigate(['/gallery'], {queryParams: {images: JSON.stringify(this.images), index: index}});

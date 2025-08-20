@@ -67,9 +67,6 @@
 #playButton, #pauseButton{
     margin: 0 1em 0 1em;
 }
-#playButton{
-    display: none;
-}
 
 #audio_title{
     color: white;
@@ -155,4 +152,12 @@
     #seekBar{
         width: 10em;
     }
+}
+
+#noControls{
+    height: $audio-player-height;
+    width: 100vw;
+    z-index: 1;
+    position: absolute;
+    bottom: 0;
 }

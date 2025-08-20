@@ -164,6 +164,9 @@ li a:hover:not(nav a){
     border-bottom-left-radius: 1em;
     border-bottom-right-radius: 1em;
 }
+.show-details{
+    display: block;
+}
 .image_div{
     flex: initial !important;
     width: 5em !important;
@@ -241,6 +244,7 @@ li a:hover:not(nav a){
 .current-audio{
     color: $mandak-green !important;
 }
+
 @media only screen and (max-width: 700px) {
     #events_list{
         margin-top: 1em;

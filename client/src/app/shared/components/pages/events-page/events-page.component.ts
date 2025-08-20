@@ -14,45 +14,62 @@ import {EventDTO} from "../../../models/EventDTO";
 import {FooterComponent} from "../../footer/footer.component";
 import {HttpClient} from "@angular/common/http";
 import {NgClass} from "@angular/common";
-import {Router} from "@angular/router";
+import {NavigationEnd, Router} from "@angular/router";
+import {SearchbarComponent} from "../../searchbar/searchbar.component";
+import {ApiService} from "../../../services/api.service";
 
 @Component({
   selector: 'app-events-page',
   standalone: true,
     imports: [
         FooterComponent,
-        NgClass
+        NgClass,
+        SearchbarComponent
     ],
   templateUrl: './events-page.component.html',
   styleUrl: './events-page.component.scss'
 })
-export class EventsPageComponent implements AfterViewInit{
+export class EventsPageComponent implements AfterViewInit {
     @ViewChildren('details') detailsHtmlElements!: QueryList<HTMLElement>;
     @ViewChildren('cover') coverHtmlElements!: QueryList<HTMLElement>;
     @ViewChildren('title_place_date') title_place_dateHtmlElements!: QueryList<HTMLElement>;
 
     http = inject(HttpClient);
     events_list: EventDTO[] = [];
-    cover_hover_index:any = null;
-    //event_images: string[] = [];
-    //event_music_list: MusicDTO[] = [];
+    cover_hover_index:number = -1;
 
-    constructor(private audioService: AudioPlayerService, protected searchbarService: SearchbarService, private host: ElementRef<HTMLElement>, private router: Router) {}
+    constructor(private apiService: ApiService,
+                private audioService: AudioPlayerService,
+                protected searchbarService: SearchbarService,
+                private host: ElementRef<HTMLElement>,
+                private router: Router) {}
 
     ngAfterViewInit() {
-        this.Search("");
-        this.searchbarService.ShowSearchbar();
-        this.audioService.ShowAudioPlayer();
+        this.router.events.subscribe(event => {
+            if (event instanceof NavigationEnd) {
+                if (this.router.url === '/events') {
+                    let scrollTopFromSession = sessionStorage.getItem("eventsScrollTop");
+                    if(scrollTopFromSession) {
+                        this.host.nativeElement.scrollTop = parseInt(scrollTopFromSession);
+                    }
+                    setTimeout(() => {
+                        this.searchbarService.ShowSearchbar();
+                    }, 100);
+                }
+            }
+        });
         $("#search_btn").off().on("click", () => {
             this.Search($("#search_item").val());
             this.host.nativeElement.scrollTop = 0;
+            sessionStorage.setItem("eventsScrollTop", "0");
         });
-        $("#search_item").val("");
+        this.Search("");
     }
 
     @HostListener('scroll', ['$event'])
     onScroll(event: Event){
         this.searchbarService.Toggle(event);
+        sessionStorage.setItem("eventsScrollTop", this.host.nativeElement.scrollTop.toString());
     }
 
     public PlayMusicList(event_index: number, music_index: number): void {
@@ -65,15 +82,13 @@ export class EventsPageComponent implements AfterViewInit{
             actualMusicIndex: music_index
         }
 
-        this.audioService.PlayMusicList(params);
-
         sessionStorage.setItem("current_audio_from", `events`);
-        sessionStorage.setItem("current_audio_html_id", `music_${music.music_id}_${event_item.event_id}`);
+        this.audioService.PlayMusicList(params);
     }
 
     private Search(val: any){
         let item = val !== undefined ? val.toString() : "";
-        this.http.post<any[]>("http://localhost/events_data", {search_item: item})
+        this.apiService.postData("events_data", {search_item: item})
         .subscribe((events_result) => {
             this.events_list = [];
             for (let i = 0; i < events_result.length; i++) {
@@ -107,45 +122,50 @@ export class EventsPageComponent implements AfterViewInit{
     CoverClicked(details_element: HTMLElement, cover_element: HTMLElement, title_place_date_element: HTMLElement, event_item: EventDTO){
         let event_index = this.events_list.indexOf(event_item);
 
-        if(this.events_list[event_index].event_images.length === 0){
+        if(this.events_list[event_index].event_images !== null && this.events_list[event_index].event_images.length === 0){
             let event_images:string[] = [];
-            this.http.post<any[]>("http://localhost/get_local_images", {event_id: event_item.event_id})
+            this.apiService.postData("get_local_images", {event_id: event_item.event_id})
                 .subscribe((result) => {
-                    for (let j = 0; j < result.length; j++) {
-                        event_images.push(result[j].image_url.toString());
+                    if(result !== null){
+                        for (let j = 0; j < result.length; j++) {
+                            event_images.push(result[j].image_url.toString());
+                        }
                     }
                 });
             this.events_list[event_index].event_images = event_images;
         }
 
-        if(this.events_list[event_index].event_music_list.length === 0){
+        if(this.events_list[event_index].event_music_list !== null && this.events_list[event_index].event_music_list.length === 0){
             let event_music_list:MusicDTO[] = [];
-            this.http.post<any[]>("http://localhost/music_to_event", {event_id: event_item.event_id})
+            this.apiService.postData("music_to_event", {event_id: event_item.event_id})
                 .subscribe((result) => {
-                    for (let j = 0; j < result.length; j++) {
-                        if(result[j].author !== "") {
-                            event_music_list.push(new MusicDTO(result[j].id, result[j].title, event_item, result[j].author));
-                        } else {
-                            event_music_list.push(new MusicDTO(result[j].id, result[j].title, event_item));
+                    if(result !== null){
+                        for (let j = 0; j < result.length; j++) {
+                            if(result[j].author !== "") {
+                                event_music_list.push(new MusicDTO(result[j].id, result[j].title, event_item, result[j].author));
+                            } else {
+                                event_music_list.push(new MusicDTO(result[j].id, result[j].title, event_item));
+                            }
                         }
                     }
                 });
             this.events_list[event_index].event_music_list = event_music_list;
         }
 
-        //if(event_item.event_description !== null && event_item.event_description.length > 1){
-           setTimeout(() => {
+        setTimeout(() => {
+           if((event_item.event_description !== null && event_item.event_description.length > 1) ||
+               (this.events_list[event_index].event_images !== null && this.events_list[event_index].event_images.length > 0) ||
+               (this.events_list[event_index].event_music_list !== null &&this.events_list[event_index].event_music_list.length > 0)) {
+
                $(details_element).slideToggle("fast");
                cover_element.classList.toggle("hide_bottom_radius");
                title_place_date_element.classList.toggle("hide_bottom_radius");
-           }, 100);
-        //}
+           }
+        }, 100);
     }
 
     ViewInGallery(images: string[], index: number){
         images = images.map(image => "/assets" + image);
         this.router.navigate(['/gallery'], {queryParams: {images: JSON.stringify(images), index: index}});
     }
-
-    protected readonly sessionStorage = sessionStorage;
 }

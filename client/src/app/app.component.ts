@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component} from '@angular/core';
 import { NavbarComponent } from "./shared/components/navbar/navbar.component";
 import { SearchbarComponent } from "./shared/components/searchbar/searchbar.component";
 import {AudioPlayerComponent} from "./shared/components/audio-player/audio-player.component";
@@ -13,7 +13,7 @@ import $ from "jquery";
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements AfterViewInit{
     title = 'Mandak_angular';
 
     cookies_accepted = localStorage.getItem("cookies_accepted") === 'true';
@@ -26,10 +26,11 @@ export class AppComponent implements OnInit{
         });
     }
 
-    ngOnInit() {
-        setTimeout(() => {
+    ngAfterViewInit() {
+        /*setTimeout(() => {
             $(".title").removeClass("current-audio");
             $(".events_music_title").removeClass("current-audio");
-        }, 100);
+        }, 100);*/
     }
+
 }

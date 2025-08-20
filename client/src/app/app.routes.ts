@@ -9,9 +9,9 @@ import {NgModule} from "@angular/core";
 export const routes: Routes = [
     { path: 'home', component: HomePageComponent },
     { path: '', redirectTo: 'home', pathMatch: "full"},
-    { path: 'gallery', component: GalleryPageComponent },
-    { path: 'repertoire', component: RepertoirePageComponent },
-    { path: 'events', component: EventsPageComponent },
+    { path: 'gallery', component: GalleryPageComponent},
+    { path: 'repertoire', component: RepertoirePageComponent, data: { store: true }},
+    { path: 'events', component: EventsPageComponent, data: { store: true }},
     { path: 'villa', component: VillaPageComponent }
 ];
 

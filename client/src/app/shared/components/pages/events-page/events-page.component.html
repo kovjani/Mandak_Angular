@@ -1,4 +1,4 @@
-
+<app-searchbar></app-searchbar>
 <div id="events_list_container" class="container">
     <div id="events_list">
         @for (event_item of events_list; track $index){
@@ -13,7 +13,7 @@
                         'url(/assets/images/default_cover.jpg)'"
                      (click)="CoverClicked(details, cover, title_place_date, event_item)"
                      (mouseenter)="cover_hover_index=$index"
-                     (mouseleave)="cover_hover_index=null">
+                     (mouseleave)="cover_hover_index=-1">
 
                     <div #title_place_date class="title_place_date"
                          [ngClass]="{'title_place_date-with-image' : cover_image_exist}">
@@ -55,13 +55,11 @@
                                     <li (click)="PlayMusicList(events_list.indexOf(event_item), $index)" >
                                         @if (music.music_author !== "") {
                                             <p [id]="'music_' + music.music_id + '_' + event_item.event_id"
-                                               class = "events_music_title"
-                                               [ngClass]="{'current-audio': 'music_' + music.music_id + '_' + event_item.event_id === sessionStorage.getItem('current_audio_html_id')}">
+                                               class = "events_music_title">
                                                 {{music.music_author + ": " + music.music_title}}</p>
                                         } @else {
                                             <p [id]="'music_' + music.music_id + '_' + event_item.event_id"
-                                               class = "events_music_title"
-                                               [ngClass]="{'current-audio': 'music_' + music.music_id + '_' + event_item.event_id === sessionStorage.getItem('current_audio_html_id')}">
+                                               class = "events_music_title">
                                                 {{music.music_title}}</p>
                                         }
                                     </li>

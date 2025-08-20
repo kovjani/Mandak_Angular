@@ -1,4 +1,4 @@
-<footer class="dark_mode">
+<footer [ngClass]="{'dark_mode' : localStorage.getItem('nav_style') === 'dark'}">
     <div class="container">
         <div class="footer-content-container">
             <div class="content-item">

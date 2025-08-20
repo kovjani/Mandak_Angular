@@ -1,19 +1,22 @@
-<nav class="navbar navbar-expand-lg navbar-dark">
+<nav class="navbar navbar-expand-lg navbar-dark"
+     [ngClass]="{'dark_mode' : localStorage.getItem('nav_style') === 'dark'}">
     <div class="container-fluid position-relative">
         <img id="nav-logo" src="/assets/images/logo-small-new.png" alt="logo" class="navbar-brand dark_logo" (click)="Dark_mode()">
 
         <button class="navbar-toggler position-absolute end-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"
+                (click)="isCollapsed = !isCollapsed">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="collapse navbar-collapse" [ngClass]="{'show': !isCollapsed}" id="navbarNav">
             <ul class="navbar-nav">
                 @for (item of nav_items; track item.id) {
                     <li class="nav-item nav-link"
                         [id]="item.id + '-nav-item'"
                         [routerLink]="'/' + item.id"
-                        routerLinkActive="active">
+                        routerLinkActive="active"
+                        (click)="isCollapsed = true">
                         {{ item.name }}
                     </li>
                 }

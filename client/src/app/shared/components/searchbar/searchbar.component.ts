@@ -1,7 +1,8 @@
 import $ from 'jquery';
-import {Component, OnInit, OnDestroy, HostBinding} from '@angular/core';
+import {Component, OnInit, OnDestroy, HostBinding, ElementRef} from '@angular/core';
 import {SearchbarService} from "../../services/searchbar.service";
 import {Subscription} from "rxjs";
+import {NavigationEnd, Router} from "@angular/router";
 
 @Component({
     selector: 'app-searchbar',
@@ -11,9 +12,7 @@ import {Subscription} from "rxjs";
     styleUrl: './searchbar.component.scss'
 })
 export class SearchbarComponent implements OnInit, OnDestroy {
-    @HostBinding('attr.id') id = 'searchbar-component';
-    private repertoireSearchingSubscribtion!: Subscription;
-    private eventsSearchingSubscribtion!: Subscription;
+
     private searchbarToggleSubscribtion!: Subscription;
     private searchbarShowingSubscribtion!: Subscription;
     private searchbarHidingSubscribtion!: Subscription;
@@ -22,16 +21,10 @@ export class SearchbarComponent implements OnInit, OnDestroy {
 
     private search_bar_hidden:boolean = false;
 
-    constructor(private searchbarService: SearchbarService) {
+    constructor(private searchbarService: SearchbarService, private router: Router, private host: ElementRef<HTMLElement>) {
     }
 
     ngOnInit() {
-        this.repertoireSearchingSubscribtion = this.searchbarService.RepertoireSearching$.subscribe((search_item: string) => {
-           this.RepertoireSearch(search_item);
-        });
-        this.eventsSearchingSubscribtion = this.searchbarService.EventsSearching$.subscribe((search_item: string) => {
-            this.EventsSearch(search_item);
-        });
         this.searchbarToggleSubscribtion = this.searchbarService.SearchbarToggle$.subscribe((event:Event) => {
            this.ToggleSearchBar(event);
         });
@@ -51,15 +44,13 @@ export class SearchbarComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.repertoireSearchingSubscribtion.unsubscribe();
-        this.eventsSearchingSubscribtion.unsubscribe();
         this.searchbarToggleSubscribtion.unsubscribe();
         this.searchbarShowingSubscribtion.unsubscribe();
         this.searchbarHidingSubscribtion.unsubscribe();
     }
 
 
-    
+
 
     ToggleSearchBar(event: Event) {
         const target = event.target as HTMLElement;
@@ -79,25 +70,15 @@ export class SearchbarComponent implements OnInit, OnDestroy {
 
     ShowSearchBar() {
         this.search_bar_hidden = false;
-        $("#searchbar-component").stop(true, true).animate({
+        $(this.host.nativeElement).stop(true, true).animate({
             top: '3.5em'
         });
     }
 
     HideSearchBar() {
         this.search_bar_hidden = true;
-        $("#searchbar-component").stop(true, true).animate({
+        $(this.host.nativeElement).stop(true, true).animate({
             top: '-5em'
         });
     }
-
-    RepertoireSearch(item: string) : any{
-        $("#repertoire_list").empty();
-        console.log(item)
-        $.post("repertoire_data", {search_item: item}, function(repertoire_result){
-            return repertoire_result;
-        });
-    }
-
-    EventsSearch(search_item: string){console.log("Events: " + search_item);}
 }

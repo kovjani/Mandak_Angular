@@ -1,6 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {SearchbarService} from "../../../services/searchbar.service";
-import {AudioPlayerService} from "../../../services/audio-player.service";
 import $ from 'jquery';
 import {FooterComponent} from "../../footer/footer.component";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -25,9 +23,7 @@ export class GalleryPageComponent implements OnInit{
     ];
 
     constructor(private route: ActivatedRoute,
-                private router: Router,
-                private searchbarService: SearchbarService,
-                private audioService: AudioPlayerService) {}
+                private router: Router) {}
 
     ngOnInit() {
 
@@ -54,24 +50,7 @@ export class GalleryPageComponent implements OnInit{
             }
         }
 
-        this.searchbarService.HideSearchbar();
-        this.audioService.HideAudioPlayer();
-
         this.SetPicture();
-
-        $("#gallery_back_btn").off().on('click', () => {
-            if(this.image_index > 0){
-                this.image_index--;
-                this.SetPicture();
-            }
-        });
-
-        $("#gallery_next_btn").off().on('click', () => {
-            if(this.image_index < this.images.length - 1){
-                this.image_index++;
-                this.SetPicture();
-            }
-        });
     }
 
     private SetPicture(){
@@ -79,5 +58,19 @@ export class GalleryPageComponent implements OnInit{
         picture.attr("src", this.images[this.image_index]);
         picture.attr("alt", this.images[this.image_index]);
         sessionStorage.setItem('index_str', this.image_index.toString());
+    }
+
+    PreviousPicture(){
+        if(this.image_index > 0){
+            this.image_index--;
+            this.SetPicture();
+        }
+    }
+
+    NextPicture(){
+        if(this.image_index < this.images.length - 1){
+            this.image_index++;
+            this.SetPicture();
+        }
     }
 }

@@ -1,14 +1,13 @@
+<app-searchbar></app-searchbar>
 <div id="repertoire_list_container" class="container">
     <div id='repertoire_list'>
         @for (music of music_list; track $index) {
             <div class="list-item" (click)="PlayMusicList(music_list, $index)">
                 @if (music.music_author !== "") {
                     <p [id]='"repertoire_title_" + music.music_id'
-                       [ngClass] = "{'current-audio': 'repertoire_title_' + music.music_id === sessionStorage.getItem('current_audio_html_id')}"
                        class = "title">{{music.music_author + ": " + music.music_title}}</p>
                 } @else {
                     <p [id]='"repertoire_title_" + music.music_id'
-                       [ngClass] = "{'current-audio': 'repertoire_title_' + music.music_id === sessionStorage.getItem('current_audio_html_id')}"
                        class = "title">{{music.music_title}}</p>
                 }
                 <div class="repertoire_place">

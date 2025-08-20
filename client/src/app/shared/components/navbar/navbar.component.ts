@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import $ from 'jquery';
+import {Component} from '@angular/core';
 import {RouterLink, RouterLinkActive} from "@angular/router";
+import {NgClass} from "@angular/common";
 
 interface Pages {
     id: string,
@@ -13,12 +13,15 @@ interface Pages {
     templateUrl: './navbar.component.html',
     imports: [
         RouterLink,
-        RouterLinkActive
+        RouterLinkActive,
+        NgClass
     ],
     styleUrl: './navbar.component.scss'
 })
 
-export class NavbarComponent implements OnInit{
+export class NavbarComponent {
+
+    isCollapsed = true;
 
     nav_items: Pages[] = [
         { id: "home", name: "Kezdőlap" },
@@ -28,15 +31,6 @@ export class NavbarComponent implements OnInit{
         { id: "villa", name: "A Mandák-villa" }
     ];
 
-    ngOnInit(): void {
-        if(localStorage.getItem("nav_style") === "dark"){
-            $("nav").addClass("dark_mode");
-        }
-        else{
-            $("nav").removeClass("dark_mode");
-        }
-    }
-
     Dark_mode(){
         if(localStorage.getItem("nav_style") === "dark"){
             localStorage.setItem("nav_style", "burgundy");
@@ -44,21 +38,7 @@ export class NavbarComponent implements OnInit{
         else{
             localStorage.setItem("nav_style", "dark");
         }
-        this.SetStyle();
     }
 
-    SetStyle(){
-        if(localStorage.getItem("nav_style") === "dark"){
-            $("nav").addClass("dark_mode");
-            $("#nav-logo").addClass("dark_logo");
-            $("footer").addClass("dark_mode");
-            $('#audio-player-container').addClass("dark_mode");
-        }
-        else{
-            $("nav").removeClass("dark_mode");
-            $("#nav-logo").removeClass("dark_logo");
-            $("footer").removeClass("dark_mode");
-            $('#audio-player-container').removeClass("dark_mode");
-        }
-    }
+    protected readonly localStorage = localStorage;
 }

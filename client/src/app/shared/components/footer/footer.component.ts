@@ -1,20 +1,15 @@
-import {Component, OnInit} from '@angular/core';
-import $ from "jquery";
+import {Component} from '@angular/core';
+import {NgClass} from "@angular/common";
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [],
+    imports: [
+        NgClass
+    ],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss'
 })
-export class FooterComponent implements OnInit{
-    ngOnInit() {
-        if(localStorage.getItem("nav_style") === "dark"){
-            $("footer").addClass("dark_mode");
-        }
-        else{
-            $("footer").removeClass("dark_mode");
-        }
-    }
+export class FooterComponent {
+    protected readonly localStorage = localStorage;
 }

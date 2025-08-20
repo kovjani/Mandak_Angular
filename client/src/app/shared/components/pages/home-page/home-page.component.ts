@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {SearchbarService} from "../../../services/searchbar.service";
 import {AudioPlayerService} from "../../../services/audio-player.service";
 import {FooterComponent} from "../../footer/footer.component";
@@ -16,13 +16,9 @@ import {NavbarComponent} from "../../navbar/navbar.component";
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss'
 })
-export class HomePageComponent implements OnInit {
+export class HomePageComponent {
 
     constructor(private searchbarService: SearchbarService, private audioService: AudioPlayerService) {}
     cookies_accepted = localStorage.getItem("cookies_accepted") === 'true';
 
-    ngOnInit() {
-        this.searchbarService.HideSearchbar();
-        this.audioService.HideAudioPlayer();
-    }
 }
