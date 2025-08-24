@@ -31,7 +31,6 @@ export class HeaderImageComponent implements OnInit, OnDestroy {
             });
         }, 100);
         this.interval = setInterval(() => this.HomeNext(), 5000);
-
     }
 
     ngOnDestroy() {

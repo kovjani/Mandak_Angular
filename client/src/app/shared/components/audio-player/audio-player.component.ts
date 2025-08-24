@@ -26,6 +26,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy, AfterViewInit{
     private setMusicListSubscription!: Subscription;
     private audioPlayerShowingSubscription!: Subscription;
     private audioPlayerHidingSubscription!: Subscription;
+    private audioPlayerToggleSubscription!: Subscription;
 
     private audio_player_hidden: boolean = false;
     isPlaying = false;
@@ -39,9 +40,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy, AfterViewInit{
         this.router.events.subscribe(event => {
             if (event instanceof NavigationEnd) {
                 if (this.router.url === '/events' || this.router.url === '/repertoire') {
-                    this.ShowAudioPlayer();
+                    this.audioService.ShowAudioPlayer();
                 } else {
-                    this.HideAudioPlayer();
+                    this.audioService.HideAudioPlayer();
                 }
                 let current_audio_from = sessionStorage.getItem("current_audio_from");
                 if(this.router.url === '/repertoire' && current_audio_from === "events"){
@@ -53,17 +54,18 @@ export class AudioPlayerComponent implements OnInit, OnDestroy, AfterViewInit{
         });
         this.playMusicListSubscription = this.audioService.playMusicList$.subscribe((params: MusicListParams) => {
             this.PlayMusicList(params);
-            this.ShowAudioPlayer();
         });
         this.setMusicListSubscription = this.audioService.setMusicList$.subscribe((params: MusicListParams) => {
             this.SetMusicList(params);
-            this.ShowAudioPlayer();
         });
         this.audioPlayerShowingSubscription = this.audioService.audioPlayerShowing$.subscribe(() => {
             this.ShowAudioPlayer();
         });
         this.audioPlayerHidingSubscription = this.audioService.audioPlayerHiding$.subscribe(() => {
             this.HideAudioPlayer();
+        });
+        this.audioPlayerToggleSubscription = this.audioService.audioPlayerToggle$.subscribe(() => {
+            this.ToggleAudioPlayer();
         });
     }
 
@@ -115,6 +117,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy, AfterViewInit{
         this.setMusicListSubscription.unsubscribe();
         this.audioPlayerShowingSubscription.unsubscribe();
         this.audioPlayerHidingSubscription.unsubscribe();
+        this.audioPlayerToggleSubscription.unsubscribe();
     }
 
     PlayAudio() {
@@ -215,6 +218,14 @@ export class AudioPlayerComponent implements OnInit, OnDestroy, AfterViewInit{
         $(this.host.nativeElement).stop(true, true).animate({
             bottom: '-7em'
         });
+    }
+
+    ToggleAudioPlayer(){
+        if(this.audio_player_hidden){
+            this.audioService.ShowAudioPlayer();
+        } else {
+            this.audioService.HideAudioPlayer();
+        }
     }
 
     protected readonly localStorage = localStorage;

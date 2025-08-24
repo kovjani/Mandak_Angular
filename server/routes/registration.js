@@ -28,7 +28,7 @@
 //                     if(error) {
 //                         console.log(error);
 //                     } else {
-//                         res.send('<script>alert("Sikeres regisztáció."); location.href = "/login"; </script>');
+//                         res.send('<script>alert("Sikeres regisztáció."); location.href = "/login-page"; </script>');
 //                         db.end();
 //                     }
 //                 });

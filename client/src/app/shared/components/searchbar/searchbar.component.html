@@ -1,7 +1,8 @@
 <div id="searchbar_outside_container">
     <div id="searchbar_container">
-        <input id="search_item" class="form-control me-2" type="text" placeholder="Keresés">
-        <button id="search_btn" class="fa fa-search search_btn"></button>
+        <input #search_item id="search_item" class="form-control me-2" type="text" placeholder="Keresés"
+        (keydown.enter)="Search(search_item.value)">
+        <button id="search_btn" class="fa fa-search search_btn" (click)="Search(search_item.value)"></button>
     </div>
 </div>
 

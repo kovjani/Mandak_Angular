@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {SearchbarService} from "../../../services/searchbar.service";
-import {AudioPlayerService} from "../../../services/audio-player.service";
+import {Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
 import {FooterComponent} from "../../footer/footer.component";
 import {Router} from "@angular/router";
+import {AudioPlayerService} from "../../../services/audio-player.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-villa-page',
@@ -13,7 +13,10 @@ import {Router} from "@angular/router";
   templateUrl: './villa-page.component.html',
   styleUrl: './villa-page.component.scss'
 })
-export class VillaPageComponent {
+export class VillaPageComponent implements OnInit, OnDestroy{
+
+    private audioPlayerShowingSubscription!: Subscription;
+    private audioPlayerHidingSubscription!: Subscription;
 
     images = [
         "/assets/images/villa/1.jpg",
@@ -37,7 +40,23 @@ export class VillaPageComponent {
     ];
 
 
-    constructor(private router: Router) {}
+    constructor(private router: Router,
+                private audioService: AudioPlayerService,
+                private host: ElementRef<HTMLElement>,) {}
+
+    ngOnInit() {
+        this.audioPlayerShowingSubscription = this.audioService.audioPlayerShowing$.subscribe(() => {
+            this.host.nativeElement.classList.add("with-audio-player");
+        });
+        this.audioPlayerHidingSubscription = this.audioService.audioPlayerHiding$.subscribe(() => {
+            this.host.nativeElement.classList.remove("with-audio-player");
+        });
+    }
+
+    ngOnDestroy() {
+        this.audioPlayerShowingSubscription.unsubscribe();
+        this.audioPlayerHidingSubscription.unsubscribe();
+    }
 
     ViewInGallery(index: number){
         this.router.navigate(['/gallery'], {queryParams: {images: JSON.stringify(this.images), index: index}});

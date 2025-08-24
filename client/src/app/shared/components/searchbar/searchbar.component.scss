@@ -1,10 +1,14 @@
 
 :host{
     position: fixed;
-    width: 100vw;
+    width: 95%;
+    display: block;
     z-index: 1;
     // top: -5em;
     top: 3.5em;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
 }
 
 #searchbar_container {
@@ -13,9 +17,6 @@
     max-width: 40em;
 }
 #searchbar_outside_container{
-    display: block;
-    margin: auto;
-    width: 95%;
     background: white;
     padding: 1em;
 }
@@ -25,8 +26,10 @@
     margin: 0 0.5em;
 }
 
+
+
 @media only screen and (max-width: 700px) {
-    #searchbar_outside_container{
+    :host{
         width: 100%;
     }
 }

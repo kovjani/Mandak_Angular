@@ -1,7 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
 import $ from 'jquery';
 import {FooterComponent} from "../../footer/footer.component";
 import {ActivatedRoute, Router} from "@angular/router";
+import {Subscription} from "rxjs";
+import {AudioPlayerService} from "../../../services/audio-player.service";
 
 @Component({
   selector: 'app-gallery-page',
@@ -12,7 +14,7 @@ import {ActivatedRoute, Router} from "@angular/router";
   templateUrl: './gallery-page.component.html',
   styleUrl: './gallery-page.component.scss'
 })
-export class GalleryPageComponent implements OnInit{
+export class GalleryPageComponent implements OnInit, OnDestroy{
 
     image_index = 0;
     images = [
@@ -22,10 +24,22 @@ export class GalleryPageComponent implements OnInit{
         "/assets/images/gallery/5.jpg"
     ];
 
+    private audioPlayerShowingSubscription!: Subscription;
+    private audioPlayerHidingSubscription!: Subscription;
+
     constructor(private route: ActivatedRoute,
-                private router: Router) {}
+                private router: Router,
+                private host: ElementRef<HTMLElement>,
+                private audioService: AudioPlayerService) {}
 
     ngOnInit() {
+
+        this.audioPlayerShowingSubscription = this.audioService.audioPlayerShowing$.subscribe(() => {
+            this.host.nativeElement.classList.add("with-audio-player");
+        });
+        this.audioPlayerHidingSubscription = this.audioService.audioPlayerHiding$.subscribe(() => {
+            this.host.nativeElement.classList.remove("with-audio-player");
+        });
 
         let images_str = this.route.snapshot.queryParamMap.get("images");
         let index_str = this.route.snapshot.queryParamMap.get("index");
@@ -51,6 +65,11 @@ export class GalleryPageComponent implements OnInit{
         }
 
         this.SetPicture();
+    }
+
+    ngOnDestroy() {
+        this.audioPlayerShowingSubscription.unsubscribe();
+        this.audioPlayerHidingSubscription.unsubscribe();
     }
 
     private SetPicture(){

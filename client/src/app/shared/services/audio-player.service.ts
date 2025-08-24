@@ -14,11 +14,13 @@ export class AudioPlayerService {
     private setMusicListSource = new Subject<MusicListParams>();
     private audioPlayerShowingSource = new Subject<void>();
     private audioPlayerHidingSource = new Subject<void>();
+    private audioPlayerToggleSource = new Subject<void>();
 
     playMusicList$ = this.playMusicListSource.asObservable();
     setMusicList$ = this.setMusicListSource.asObservable();
     audioPlayerShowing$ = this.audioPlayerShowingSource.asObservable();
     audioPlayerHiding$ = this.audioPlayerHidingSource.asObservable();
+    audioPlayerToggle$ = this.audioPlayerToggleSource.asObservable();
 
     PlayMusicList(params: MusicListParams) {
         this.playMusicListSource.next(params);
@@ -34,5 +36,9 @@ export class AudioPlayerService {
 
     HideAudioPlayer(){
         this.audioPlayerHidingSource.next();
+    }
+
+    ToggleAudioPlayer(){
+        this.audioPlayerToggleSource.next();
     }
 }

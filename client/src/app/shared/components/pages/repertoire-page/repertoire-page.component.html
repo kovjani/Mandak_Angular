@@ -1,4 +1,5 @@
-<app-searchbar></app-searchbar>
+<app-searchbar [searchFunction]="Search.bind(this)"
+                [ngClass]="{'show_searchbar' : !isSearchBarHidden, 'hide_searchbar': isSearchBarHidden}"></app-searchbar>
 <div id="repertoire_list_container" class="container">
     <div id='repertoire_list'>
         @for (music of music_list; track $index) {

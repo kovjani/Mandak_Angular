@@ -1,19 +1,19 @@
-import {AfterViewInit, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import { NavbarComponent } from "./shared/components/navbar/navbar.component";
 import { SearchbarComponent } from "./shared/components/searchbar/searchbar.component";
 import {AudioPlayerComponent} from "./shared/components/audio-player/audio-player.component";
 import {CookieWarningComponent} from "./shared/components/cookie-warning/cookie-warning.component";
 import {Router, RouterOutlet} from "@angular/router";
-import $ from "jquery";
+import {NgClass} from "@angular/common";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-    imports: [NavbarComponent, SearchbarComponent, AudioPlayerComponent, CookieWarningComponent, RouterOutlet],
+    imports: [NavbarComponent, SearchbarComponent, AudioPlayerComponent, CookieWarningComponent, RouterOutlet, NgClass],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements AfterViewInit{
+export class AppComponent {
     title = 'Mandak_angular';
 
     cookies_accepted = localStorage.getItem("cookies_accepted") === 'true';
@@ -26,11 +26,5 @@ export class AppComponent implements AfterViewInit{
         });
     }
 
-    ngAfterViewInit() {
-        /*setTimeout(() => {
-            $(".title").removeClass("current-audio");
-            $(".events_music_title").removeClass("current-audio");
-        }, 100);*/
-    }
-
+    protected readonly localStorage = localStorage;
 }

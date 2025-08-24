@@ -4,9 +4,14 @@
     display: block;
     overflow-y: auto;
     scrollbar-color: grey transparent;
+    height: calc(100vh - $navbar-height);
+}
+:host(.with-audio-player) {
     height: calc(100vh - $navbar-height - $audio-player-height);
 }
-
+.with-audio-player {
+    height: calc(100vh - $navbar-height - $audio-player-height);
+}
 .list-item{
     border-bottom: solid gray 1px;
     padding: 1em;
@@ -77,4 +82,24 @@ ul{
 }
 .current-audio{
     color: $mandak-green;
+}
+.show_searchbar{
+    top: 3.5em;
+    animation-name: show-animation;
+    animation-duration: 0.5s;
+}
+.hide_searchbar{
+    top: -5em;
+    animation-name: hide-animation;
+    animation-duration: 1s;
+}
+
+@keyframes show-animation {
+    from {top: -5em;}
+    to {top: 3.5em;}
+}
+
+@keyframes hide-animation {
+    from {top: 3.5em;}
+    to {top: -5em;}
 }

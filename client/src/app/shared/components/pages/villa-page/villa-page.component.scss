@@ -10,6 +10,14 @@
     background-attachment: fixed;
     background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(/assets/images/kantorkepzo.jpg);
 }
+
+:host(.with-audio-player) {
+    height: calc(100vh - $navbar-height - $audio-player-height);
+}
+.with-audio-player {
+    height: calc(100vh - $navbar-height - $audio-player-height);
+}
+
 #villa-page-container{
     color: white;
     margin-top: 5em;

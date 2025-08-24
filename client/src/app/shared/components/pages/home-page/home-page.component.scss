@@ -6,7 +6,12 @@
     overflow-y: auto;
     overflow-x: hidden;
 }
-
+:host(.with-audio-player) {
+    height: calc(100vh - $audio-player-height);
+}
+.with-audio-player {
+    height: calc(100vh - $audio-player-height);
+}
 #home-page-container{
     margin-top: 5em;
     text-align: justify;

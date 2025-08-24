@@ -1,4 +1,5 @@
-<app-searchbar></app-searchbar>
+<app-searchbar [searchFunction]="Search.bind(this)"
+               [ngClass]="{'show_searchbar' : !isSearchBarHidden, 'hide_searchbar': isSearchBarHidden}"></app-searchbar>
 <div id="events_list_container" class="container">
     <div id="events_list">
         @for (event_item of events_list; track $index){

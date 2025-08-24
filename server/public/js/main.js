@@ -49,13 +49,13 @@ $(document).ready(function(){
         $('#villa-nav-item').addClass('active');
     });
 
-    $('#login-nav-item').click(() => {
+    $('#login-page-nav-item').click(() => {
         // Change page
         $('.page_container').hide();
         $('#login_page_container').show();
         // Change active nav-item
         $('.active').removeClass('active');
-        $('#login-nav-item').addClass('active');
+        $('#login-page-nav-item').addClass('active');
     });
 });
 function Dark_mode(){

@@ -37,8 +37,8 @@ module.exports = function (app, fs) {
         return next();
     });
 
-    app.get('/login', (req, res, next) => {
-        res.render('login');
+    app.get('/login-page', (req, res, next) => {
+        res.render('login-page');
         return next();
     });*/
     

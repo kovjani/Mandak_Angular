@@ -3,12 +3,11 @@ import {
     Component,
     ElementRef,
     HostListener,
-    inject, QueryList,
+    inject, OnDestroy, OnInit, QueryList,
     ViewChildren
 } from '@angular/core';
 import $ from "jquery";
 import {AudioPlayerService, MusicListParams} from "../../../services/audio-player.service";
-import {SearchbarService} from "../../../services/searchbar.service";
 import {MusicDTO} from "../../../models/MusicDTO";
 import {EventDTO} from "../../../models/EventDTO";
 import {FooterComponent} from "../../footer/footer.component";
@@ -17,6 +16,7 @@ import {NgClass} from "@angular/common";
 import {NavigationEnd, Router} from "@angular/router";
 import {SearchbarComponent} from "../../searchbar/searchbar.component";
 import {ApiService} from "../../../services/api.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-events-page',
@@ -29,7 +29,7 @@ import {ApiService} from "../../../services/api.service";
   templateUrl: './events-page.component.html',
   styleUrl: './events-page.component.scss'
 })
-export class EventsPageComponent implements AfterViewInit {
+export class EventsPageComponent implements AfterViewInit, OnInit, OnDestroy {
     @ViewChildren('details') detailsHtmlElements!: QueryList<HTMLElement>;
     @ViewChildren('cover') coverHtmlElements!: QueryList<HTMLElement>;
     @ViewChildren('title_place_date') title_place_dateHtmlElements!: QueryList<HTMLElement>;
@@ -38,9 +38,14 @@ export class EventsPageComponent implements AfterViewInit {
     events_list: EventDTO[] = [];
     cover_hover_index:number = -1;
 
+    private audioPlayerShowingSubscription!: Subscription;
+    private audioPlayerHidingSubscription!: Subscription;
+
+    protected isSearchBarHidden: boolean = false;
+    private lastScrollTop:number = 0;
+
     constructor(private apiService: ApiService,
                 private audioService: AudioPlayerService,
-                protected searchbarService: SearchbarService,
                 private host: ElementRef<HTMLElement>,
                 private router: Router) {}
 
@@ -52,23 +57,42 @@ export class EventsPageComponent implements AfterViewInit {
                     if(scrollTopFromSession) {
                         this.host.nativeElement.scrollTop = parseInt(scrollTopFromSession);
                     }
-                    setTimeout(() => {
-                        this.searchbarService.ShowSearchbar();
-                    }, 100);
+                    this.isSearchBarHidden = false;
                 }
             }
-        });
-        $("#search_btn").off().on("click", () => {
-            this.Search($("#search_item").val());
-            this.host.nativeElement.scrollTop = 0;
-            sessionStorage.setItem("eventsScrollTop", "0");
         });
         this.Search("");
     }
 
+    ngOnInit() {
+        this.audioPlayerShowingSubscription = this.audioService.audioPlayerShowing$.subscribe(() => {
+            this.host.nativeElement.classList.add("with-audio-player");
+        });
+        this.audioPlayerHidingSubscription = this.audioService.audioPlayerHiding$.subscribe(() => {
+            this.host.nativeElement.classList.remove("with-audio-player");
+        });
+    }
+
+    ngOnDestroy() {
+        this.audioPlayerShowingSubscription.unsubscribe();
+        this.audioPlayerHidingSubscription.unsubscribe();
+    }
+
     @HostListener('scroll', ['$event'])
     onScroll(event: Event){
-        this.searchbarService.Toggle(event);
+        const target = event.target as HTMLElement;
+        const st:number = target.scrollTop;
+
+        if(st !== undefined){
+            if (st > this.lastScrollTop && !this.isSearchBarHidden){
+                // Hide search_bar on downscroll.
+                this.isSearchBarHidden = true;
+            } else if (st <= this.lastScrollTop && this.isSearchBarHidden){
+                // Show search_bar on upscroll.
+                this.isSearchBarHidden = false;
+            }
+            this.lastScrollTop = st;
+        }
         sessionStorage.setItem("eventsScrollTop", this.host.nativeElement.scrollTop.toString());
     }
 
@@ -83,10 +107,14 @@ export class EventsPageComponent implements AfterViewInit {
         }
 
         sessionStorage.setItem("current_audio_from", `events`);
+
         this.audioService.PlayMusicList(params);
     }
 
-    private Search(val: any){
+    protected Search(val: any){
+        this.host.nativeElement.scrollTop = 0;
+        sessionStorage.setItem("eventsScrollTop", "0");
+
         let item = val !== undefined ? val.toString() : "";
         this.apiService.postData("events_data", {search_item: item})
         .subscribe((events_result) => {

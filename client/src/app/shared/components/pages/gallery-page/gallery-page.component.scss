@@ -7,7 +7,12 @@
     overflow-y: scroll;
     overflow-x: hidden;
 }
-
+:host(.with-audio-player) {
+    height: calc(100vh - $navbar-height - $audio-player-height);
+}
+.with-audio-player {
+    height: calc(100vh - $navbar-height - $audio-player-height);
+}
 #gallery_picture{
     max-height: 80vh;
     max-width: 100vw;

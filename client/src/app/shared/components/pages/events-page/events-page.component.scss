@@ -4,9 +4,14 @@
     display: block;
     overflow-y: auto;
     scrollbar-color: grey transparent;
+    height: calc(100vh - $navbar-height);
+}
+:host(.with-audio-player) {
     height: calc(100vh - $navbar-height - $audio-player-height);
 }
-
+.with-audio-player {
+    height: calc(100vh - $navbar-height - $audio-player-height);
+}
 .list-item{
     box-shadow: 0 0 0.5em #696969;
     margin: 2em auto;
@@ -243,6 +248,26 @@ li a:hover:not(nav a){
 
 .current-audio{
     color: $mandak-green !important;
+}
+.show_searchbar{
+    top: 3.5em;
+    animation-name: show-animation;
+    animation-duration: 0.5s;
+}
+.hide_searchbar{
+    top: -5em;
+    animation-name: hide-animation;
+    animation-duration: 1s;
+}
+
+@keyframes show-animation {
+    from {top: -5em;}
+    to {top: 3.5em;}
+}
+
+@keyframes hide-animation {
+    from {top: 3.5em;}
+    to {top: -5em;}
 }
 
 @media only screen and (max-width: 700px) {

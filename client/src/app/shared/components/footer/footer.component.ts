@@ -10,6 +10,7 @@ import {NgClass} from "@angular/common";
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss'
 })
-export class FooterComponent {
+export class FooterComponent{
     protected readonly localStorage = localStorage;
 }
+

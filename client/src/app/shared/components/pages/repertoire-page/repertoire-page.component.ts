@@ -1,33 +1,39 @@
-import $ from "jquery";
-import {AfterViewInit, Component, ElementRef, HostListener, inject} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, inject, OnDestroy, OnInit} from '@angular/core';
 import {MusicDTO} from "../../../models/MusicDTO";
 import {EventDTO} from "../../../models/EventDTO";
 import {AudioPlayerService, MusicListParams} from "../../../services/audio-player.service";
-import {SearchbarService} from "../../../services/searchbar.service";
 import {FooterComponent} from "../../footer/footer.component";
 import {HttpClient} from "@angular/common/http";
 import {NavigationEnd, Router} from "@angular/router";
 import {SearchbarComponent} from "../../searchbar/searchbar.component";
 import {ApiService} from "../../../services/api.service";
+import {NgClass} from "@angular/common";
+import {Subscription} from "rxjs";
 
 @Component({
     selector: 'app-repertoire-page',
     standalone: true,
     imports: [
         FooterComponent,
-        SearchbarComponent
+        SearchbarComponent,
+        NgClass
     ],
     templateUrl: './repertoire-page.component.html',
     styleUrl: './repertoire-page.component.scss'
 })
-export class RepertoirePageComponent implements AfterViewInit{
+export class RepertoirePageComponent implements AfterViewInit, OnInit, OnDestroy{
 
     http = inject(HttpClient);
     music_list:MusicDTO[] = [];
 
+    protected isSearchBarHidden: boolean = false;
+    private lastScrollTop:number = 0;
+
+    private audioPlayerShowingSubscription!: Subscription;
+    private audioPlayerHidingSubscription!: Subscription;
+
     constructor(private apiService: ApiService,
                 private audioService: AudioPlayerService,
-                protected searchbarService: SearchbarService,
                 private host: ElementRef<HTMLElement>,
                 private router: Router) {}
 
@@ -39,23 +45,44 @@ export class RepertoirePageComponent implements AfterViewInit{
                     if(scrollTopFromSession) {
                         this.host.nativeElement.scrollTop = parseInt(scrollTopFromSession);
                     }
-                    setTimeout(() => {
-                        this.searchbarService.ShowSearchbar();
-                    }, 100);
+                    this.isSearchBarHidden = false;
                 }
             }
-        });
-        $("#search_btn").off().on("click", () => {
-            this.Search($("#search_item").val());
-            this.host.nativeElement.scrollTop = 0;
-            sessionStorage.setItem("repertoireScrollTop", "0");
         });
         this.Search("");
     }
 
+    ngOnInit() {
+        this.audioPlayerShowingSubscription = this.audioService.audioPlayerShowing$.subscribe(() => {
+            this.host.nativeElement.classList.add("with-audio-player");
+        });
+        this.audioPlayerHidingSubscription = this.audioService.audioPlayerHiding$.subscribe(() => {
+            this.host.nativeElement.classList.remove("with-audio-player");
+        });
+    }
+
+    ngOnDestroy() {
+        this.audioPlayerShowingSubscription.unsubscribe();
+        this.audioPlayerHidingSubscription.unsubscribe();
+    }
+
     @HostListener('scroll', ['$event'])
     onScroll(event: Event){
-        this.searchbarService.Toggle(event);
+
+        const target = event.target as HTMLElement;
+        const st:number = target.scrollTop;
+
+        if(st !== undefined){
+            if (st > this.lastScrollTop && !this.isSearchBarHidden){
+                // Hide search_bar on downscroll.
+                this.isSearchBarHidden = true;
+            } else if (st <= this.lastScrollTop && this.isSearchBarHidden){
+                // Show search_bar on upscroll.
+                this.isSearchBarHidden = false;
+            }
+            this.lastScrollTop = st;
+        }
+
         sessionStorage.setItem("repertoireScrollTop", this.host.nativeElement.scrollTop.toString());
     }
 
@@ -74,7 +101,10 @@ export class RepertoirePageComponent implements AfterViewInit{
 
     }
 
-    private Search(val: any){
+    protected Search(val: any){
+        this.host.nativeElement.scrollTop = 0;
+        sessionStorage.setItem("repertoireScrollTop", "0");
+
         let item = val !== undefined ? val.toString() : "";
 
         this.apiService.postData('repertoire_data', {search_item: item})

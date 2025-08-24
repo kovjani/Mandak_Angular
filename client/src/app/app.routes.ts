@@ -5,6 +5,7 @@ import {RepertoirePageComponent} from "./shared/components/pages/repertoire-page
 import {EventsPageComponent} from "./shared/components/pages/events-page/events-page.component";
 import {VillaPageComponent} from "./shared/components/pages/villa-page/villa-page.component";
 import {NgModule} from "@angular/core";
+import {LoginPageComponent} from "./shared/components/pages/login-page/login-page.component";
 
 export const routes: Routes = [
     { path: 'home', component: HomePageComponent },
@@ -12,7 +13,8 @@ export const routes: Routes = [
     { path: 'gallery', component: GalleryPageComponent},
     { path: 'repertoire', component: RepertoirePageComponent, data: { store: true }},
     { path: 'events', component: EventsPageComponent, data: { store: true }},
-    { path: 'villa', component: VillaPageComponent }
+    { path: 'villa', component: VillaPageComponent },
+    { path: 'login', component: LoginPageComponent }
 ];
 
 @NgModule({

@@ -1,29 +1,24 @@
 import {Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
 import {FooterComponent} from "../../footer/footer.component";
-import {HeaderImageComponent} from "../../header-image/header-image.component";
-import {NavbarComponent} from "../../navbar/navbar.component";
-import {AudioPlayerService} from "../../../services/audio-player.service";
 import {Subscription} from "rxjs";
+import {AudioPlayerService} from "../../../services/audio-player.service";
 
 @Component({
-  selector: 'app-home-page',
-  standalone: true,
+  selector: 'app-login-page',
     imports: [
-        FooterComponent,
-        HeaderImageComponent,
-        NavbarComponent
+        FooterComponent
     ],
-  templateUrl: './home-page.component.html',
-  styleUrl: './home-page.component.scss'
+  templateUrl: './login-page.component.html',
+  styleUrl: './login-page.component.scss'
 })
-export class HomePageComponent implements OnInit, OnDestroy{
-    cookies_accepted = localStorage.getItem("cookies_accepted") === 'true';
+export class LoginPageComponent implements OnInit, OnDestroy{
 
     private audioPlayerShowingSubscription!: Subscription;
     private audioPlayerHidingSubscription!: Subscription;
 
-    constructor(private audioService: AudioPlayerService,
-                private host: ElementRef<HTMLElement>) {}
+    constructor(
+        private audioService: AudioPlayerService,
+        private host: ElementRef<HTMLElement>) {}
 
     ngOnInit() {
         this.audioPlayerShowingSubscription = this.audioService.audioPlayerShowing$.subscribe(() => {

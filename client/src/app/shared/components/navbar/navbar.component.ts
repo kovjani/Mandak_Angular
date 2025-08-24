@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {RouterLink, RouterLinkActive} from "@angular/router";
 import {NgClass} from "@angular/common";
+import {AudioPlayerService} from "../../services/audio-player.service";
 
 interface Pages {
     id: string,
@@ -28,8 +29,12 @@ export class NavbarComponent {
         { id: "gallery", name: "Galéria" },
         { id: "repertoire", name: "KincsTár" },
         { id: "events", name: "Fellépések" },
-        { id: "villa", name: "A Mandák-villa" }
+        { id: "villa", name: "A Mandák-villa" },
+        { id: "login", name: "Bejelentkezés" }
     ];
+
+    constructor(private audioService: AudioPlayerService) {
+    }
 
     Dark_mode(){
         if(localStorage.getItem("nav_style") === "dark"){
@@ -38,6 +43,10 @@ export class NavbarComponent {
         else{
             localStorage.setItem("nav_style", "dark");
         }
+    }
+
+    ToggleAudioPlayer(){
+        this.audioService.ToggleAudioPlayer();
     }
 
     protected readonly localStorage = localStorage;
